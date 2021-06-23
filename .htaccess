@@ -1,0 +1,23 @@
+Options +MultiViews
+
+RewriteEngine on 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME}\.php -f 
+RewriteRule ^(.*)$ $1.php
+
+RedirectMatch ^/$ /product/
+
+IndexIgnore *
+
+# Return 404 if original request is .php
+RewriteCond %{THE_REQUEST} "^[^ ]* .*?\.php[? ].*$"
+RewriteRule .* - [L,R=404]
+
+<IfModule mod_php5.c>
+php_flag log_errors on 
+php_value error_log ./errors.log
+# php_flag display_errors on 
+</IfModule>
+
+ErrorDocument 404 http://localhost:8080/project/public/404
+
