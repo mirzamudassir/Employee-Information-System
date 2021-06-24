@@ -67,11 +67,11 @@ function isEmployeeValid($userID){
         $access_level= $row['access_level'];
         $account_status= $row['account_status'];
 
-        if($access_level==='EMPLOYEE' AND $account_status=== 'ACTIVE'){
+        if($access_level==='USER' AND $account_status=== 'ACTIVE'){
 
         return true;
         }else{
-            header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+            header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED($account_status)");
             exit();
             return false;
         }

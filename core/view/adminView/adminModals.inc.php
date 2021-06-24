@@ -75,13 +75,13 @@ $arr= getUserData($_SESSION['username']);
 
                                         <div class="form-group to-left-50">
                                             <label>Last Education <span class="title-red">*</span></label>
-                                            <input class="form-control" name="education" type="varchar" maxlength="30" required>
+                                            <input class="form-control" name="last_education" type="varchar" maxlength="30" required>
                                            
                                         </div>
 
                                         <div class="form-group to-left-50">
                                         <label>Department <span class="title-red"> *</span></label>
-                                            <select class="form-control" name="designation" required>
+                                            <select class="form-control" name="department" required>
                                             <option value="NULL"> -- Select -- </option>
                                             <?php getDepartmentsValues($_SESSION['id']); ?>
                                             </select>
@@ -121,6 +121,27 @@ $arr= getUserData($_SESSION['username']);
                                             <label>Email <span class="title-red">*</span></label>
                                             <input class="form-control" name="email" type="email" required>
                                             
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                        <label>Access Level <span class="title-red"> *</span></label>
+                                            <select class="form-control" name="access_level" required>
+                                            <option value="NULL"> -- Select -- </option>
+                                            <option value='ADMIN'>ADMIN</option>
+                                            <option value='USER'>USER</option>
+                                            </select>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                        <label>Account Status <span class="title-red"> *</span></label>
+                                            <select class="form-control" name="account_status" required>
+                                            <option value="NULL"> -- Select -- </option>
+                                            <option value='ACTIVE'>ACTIVE</option>
+                                            <option value='DISABLED'>DISABLED</option>
+                                            <option value='DORMANT'>DORMANT</option>
+                                            </select>
+                                           
                                         </div>
                                         <div id="uname_response" ></div>
                          

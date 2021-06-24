@@ -9,11 +9,16 @@ switch($func){
 
             $username= trim($_POST['username']);
             $full_name= trim($_POST['full_name']);
-            $password= trim($_POST['password']);
+            $last_education= trim($_POST['last_education']);
+            $department= trim($_POST['department']);
             $designation= trim($_POST['designation']);
+            $profile_picture= trim($_POST['password']);
+            $password= trim($_POST['password']);
             $contact= trim($_POST['contact']);
+            $email= trim($_POST['email']);
     
-            postUser($username, $password, $full_name, $designation, $contact);
+            postUser($username, $full_name, $last_education, $department,
+             $designation, $profile_picture, $password, $contact, $email);
             break;
         case 'updateUser':
 

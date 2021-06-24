@@ -1,12 +1,14 @@
 <?php
 require_once(APP_ROOT . "/modal/initialize.php");
 
-    function postUser($username, $password, $full_name, $designation, $contact){
+    function postUser($username, $full_name, $last_education, $department,
+    $designation, $profile_picture, $password, $contact, $email){
         global $link;
         
         //using default bcrypt hsahing technique
         $password_hash= password_hash($password, PASSWORD_DEFAULT);
-        $query= $link->prepare("INSERT INTO `user_accounts` (username, password_hash, full_name, designation, contact_no) VALUES (:username, :password_hash, :full_name, :designation, :contact_no)");
+        $query= $link->prepare("INSERT INTO `user_accounts` (username, password_hash, full_name, designation, contact_no)
+        VALUES (:username, :password_hash, :full_name, :designation, :contact_no)");
         $query->bindParam(":username", $username, PDO::PARAM_STR);
         $query->bindParam(":password_hash", $password_hash, PDO::PARAM_STR);
         $query->bindParam(":full_name", $full_name, PDO::PARAM_STR);

@@ -22,7 +22,7 @@ function renderView($userID, $accessLevel, $callBackURL){
             break;
 
         
-        case 'EMPLOYEE':
+        case 'USER':
             
             if(isEmployeeValid($userID) === TRUE){
 

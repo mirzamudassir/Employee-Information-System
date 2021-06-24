@@ -30,12 +30,19 @@ global $link;
             $username= $row['username'];
             $hashed_password= $row['password_hash'];
             $accessLevel= $row['access_level'];
+            $account_status= $row['account_status'];
 
             if(password_verify($pwd, $hashed_password)){
+              if($account_status=== 'ACTIVE'){
 
              // successful login
              after_successful_login($id, $username, $accessLevel);
              redirect_to($dashboardURL);
+              }else{
+                header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED::ACCOUNT_$account_status::");
+                exit();
+                return false;
+              }
 
              }else{
                $_SESSION['error']= "Invalid Credentials";
