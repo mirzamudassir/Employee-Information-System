@@ -252,5 +252,5 @@ unset($_SESSION['notifStatus']);
   }else{
     require_once('footer.php');
   }
-  
+
 ?>
