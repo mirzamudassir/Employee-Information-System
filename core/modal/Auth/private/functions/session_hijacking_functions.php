@@ -107,7 +107,7 @@ function confirm_user_logged_in() {
 
 
 // Actions to preform after every successful login
-function after_successful_login($id, $username, $accessLevel) {
+function after_successful_login($id, $username, $accessLevel, $fullName) {
 	// Regenerate session ID to invalidate the old one.
 	// Super important to prevent session hijacking/fixation.
 	
@@ -122,6 +122,7 @@ function after_successful_login($id, $username, $accessLevel) {
 	$_SESSION['username'] = $username;
 	$_SESSION['accessLevel']= $accessLevel;
 	$_SESSION['id'] = $id;
+	$_SESSION['full_name']= $fullName;
 	
 	
 }

@@ -6,7 +6,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/project/core/view/employeeView/employ
 
 
 before_every_protected_page();
-$arr= getUserData($_SESSION['username']); 
+$userObject= new UserController();
+$arr= $userObject->getUserData($_SESSION['username']); 
 
 error_reporting(E_ALL); // Error/Exception engine, always use E_ALL
 ?>

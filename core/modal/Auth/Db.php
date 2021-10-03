@@ -15,7 +15,7 @@ final class Db{
         $this->conn= new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->db_username, $this->db_password);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }catch(PDOException $ex){
-            header("Location: http://localhost:8080/project/public/error?error_id='ERR_DB'");
+            header("Location: http://localhost:8080/project/public/error?error=ERR_DB_CONN");
         }
     } 
 
@@ -26,7 +26,7 @@ final class Db{
         }
         return self::$instance;
     }catch(PDOException $ex){
-        header("Location: http://localhost:8080/project/public/error?error_id='ERR_DB'");
+        header("Location: http://localhost:8080/project/public/error?error=ERR_DB_CONN");
     }
     }
 

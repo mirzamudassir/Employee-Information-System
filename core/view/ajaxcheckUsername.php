@@ -1,5 +1,5 @@
 <?php
-require_once('../controller/UserController.php');
+require_once("../modal/initialize.php");
 global $link;
 
 if(isset($_POST['username'])){

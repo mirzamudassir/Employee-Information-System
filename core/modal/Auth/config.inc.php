@@ -8,7 +8,7 @@ define('DATABASE_PASSWORD', '');
 define('MINPASSWORDLENGTH', '6');
 
 
-$loginURL= "http://localhost:8080/project/public/";
-$dashboardURL= "http://localhost:8080/project/public/dashboard";
+$loginURL= "http://localhost/project/public/";
+$dashboardURL= "http://localhost/project/public/dashboard";
 
 ?>

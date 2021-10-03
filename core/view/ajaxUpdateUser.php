@@ -1,12 +1,13 @@
 <?php
-require_once('../controller/UserController.php');
+require_once("../modal/initialize.php");
 
 $userid = 0;
 global $link;
 if(isset($_POST['userid'])){
    $userid = filter_var($_POST['userid'], FILTER_SANITIZE_STRING);
-}
-$sql = $link->prepare("select * from `user_accounts` where id= :id");
+
+
+$sql = $link->prepare("SELECT * FROM `user_accounts` WHERE id= :id");
 $sql->bindParam(":id", $userid, PDO::PARAM_STR);
 $sql->execute();
 while( $row = $sql->fetch()){
@@ -15,6 +16,14 @@ while( $row = $sql->fetch()){
  $full_name= $row['full_name'];
  $designation = $row['designation'];
  $contact_no = $row['contact_no'];
+}
+
+$stmt= $link->prepare("SELECT * FROM `employees` WHERE username= :username");
+$stmt->bindParam(":username", $username, PDO::PARAM_STR);
+$stmt->execute();
+while($row1= $stmt->fetch()){
+    $profilePicture= $row1["profile_picture"];
+}
 
 echo "
  
@@ -50,11 +59,12 @@ echo "
     
  </div>
 
- <input type='hidden' value='$id' name='id'>
+ <input type='hidden' value='$username' name='usernameForUpdate'>
+ 
 
  <div class='modal-footer'>
                                             
- <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+ <button type='button' class='btn btn-default' id='close' data-dismiss='modal'>Close</button>
 <input type='submit' name='updateUser' class='btn btn-success button-right-50' value='Update'>
 <input type='submit' name='deleteUser' class='btn btn-danger button-right-50' value='Delete'>
 </div>

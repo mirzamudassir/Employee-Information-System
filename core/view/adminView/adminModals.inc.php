@@ -1,7 +1,7 @@
 <?php
 require_once 'adminHeader.inc.php';
-before_every_protected_page();
-$arr= getUserData($_SESSION['username']); 
+before_every_protected_page(); 
+$userControllerObject= new UserController();
 ?>
 
 <html>
@@ -34,7 +34,7 @@ $arr= getUserData($_SESSION['username']);
                                         <div class="modal-body">
                                         
                                        <?php 
-                                            $user= getUserData($_SESSION['username']);
+                                            $user= $userControllerObject->getUserData($_SESSION['username']);
                                             echo "Name: " . $user['full_name'] . "<br>";
                                             echo "Designation: " . $user['designation'] . "<br>";
                                             echo "Contact No: " . $user['contact'] . "<br>";
@@ -59,7 +59,7 @@ $arr= getUserData($_SESSION['username']);
                                         </div>
                                         <div class="modal-body">
                                         
-                                        <form action="../core/view/dataParser?f=postUser" method="POST">
+                                        <form action="../core/view/dataParser?f=postUser" method="POST" enctype="multipart/form-data">
 
                                         <div class="form-group to-left-50">
                                             <label>Username <span class="title-red">*</span></label>
@@ -83,7 +83,7 @@ $arr= getUserData($_SESSION['username']);
                                         <label>Department <span class="title-red"> *</span></label>
                                             <select class="form-control" name="department" required>
                                             <option value="NULL"> -- Select -- </option>
-                                            <?php getDepartmentsValues($_SESSION['id']); ?>
+                                            <?php $userControllerObject->getDepartmentsValues($_SESSION['id']); ?>
                                             </select>
                                            
                                         </div>
@@ -92,14 +92,14 @@ $arr= getUserData($_SESSION['username']);
                                         <label>Designation <span class="title-red"> *</span></label>
                                             <select class="form-control" name="designation" required>
                                             <option value="NULL"> -- Select -- </option>
-                                            <?php getDesignationValues($_SESSION['id']); ?>
+                                            <?php $userControllerObject->getDesignationValues($_SESSION['id']); ?>
                                             </select>
                                            
                                         </div>
 
                                         <div class="form-group to-left-50">
                                         <label>Profile Picture <span class="title-red"> *</span></label>
-                                        <input class="form-control" name="profile_picture" type="file" required>
+                                        <input class="form-control" name="profile_picture" id="profile_picture" type="file" required>
                                            
                                         </div>
 
@@ -200,7 +200,7 @@ $arr= getUserData($_SESSION['username']);
                                         <th> Action </th>
                                         </thead>
                                         <tbody>
-                                        <?php getDepartments($_SESSION['id']); ?>
+                                        <?php $userControllerObject->getDepartments($_SESSION['id']); ?>
                                         </tbody>
                                         </table>
                                         </div>
@@ -218,7 +218,7 @@ $arr= getUserData($_SESSION['username']);
 
                            <!-- Manage Designations Modal Alert Start -->
 <div class="modal fade" id="manageDesignations" tabindex="-1" role="dialog" aria-labelledby="manageDesignations" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog" style="width:60%">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -226,12 +226,12 @@ $arr= getUserData($_SESSION['username']);
                                         </div>
                                         <div class="modal-body">
                                         <form action="../core/view/dataParser?f=postDesignation" method="POST">
-                                        <div class="form-group to-left-50">
+                                        <div class="form-group to-left-20">
                                             <label>Designation Name <span class="title-red">*</span></label>
                                             <input class="form-control" name="designation_name" type="varchar" maxlength="30" required>
                                            
                                         </div>
-                                        <div class="form-group to-left-50">
+                                        <div class="form-group to-left-20">
                                         <label>Pay Scale<span class="title-red"> *</span></label>
                                             <select class="form-control" name="pay_scale" required>
                                             <option> --- SELECT --- </option>
@@ -248,6 +248,12 @@ $arr= getUserData($_SESSION['username']);
                                             </select>
                                         </div>
 
+                                        <div class="form-group to-left-20">
+                                            <label>Basic Salary <span class="title-red">*</span></label>
+                                            <input class="form-control" name="basic_salary" type="number" maxlength="20" placeholder="Format: 100000" required>
+                                           
+                                        </div>
+
                                        <input type="submit" name="add" class="btn btn-success button-right-50" value="Add">
                                         </form>
 
@@ -256,11 +262,12 @@ $arr= getUserData($_SESSION['username']);
                                         <thead>
                                         <th> Desig. Name </th>
                                         <th> Pay Scale </th>
+                                        <th> Basic Salary </th>
                                         <th> Employees </th>
                                         <th> Action </th>
                                         </thead>
                                         <tbody>
-                                        <?php getDesignations($_SESSION['id']); ?>
+                                        <?php $userControllerObject->getDesignations($_SESSION['id']); ?>
                                         </tbody>
                                         </table>
                                         </div>

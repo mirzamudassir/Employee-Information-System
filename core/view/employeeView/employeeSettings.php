@@ -1,6 +1,6 @@
 <?php 
 require_once 'employeeHeader.php';
-
+$userObject= new UserController();
 ?>
 <style>
         table {
@@ -119,7 +119,7 @@ require_once 'employeeHeader.php';
 
                             <div class="tab-content">
                                 <div class="tab-pane fade in active" id="profile">
-                                 <?php $arr= getUserData($_SESSION['username']); ?>
+                                 <?php $arr= $userObject->getUserData($_SESSION['username']); ?>
                                  <div class="row show-grid">
                                 
                                 <div class="col-md-4 col-md-offset-4">

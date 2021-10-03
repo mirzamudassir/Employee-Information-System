@@ -6,7 +6,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/project/core/view/adminView/adminNav.
 
 
 before_every_protected_page();
-$arr= getUserData($_SESSION['username']); 
+$userObject= new User();
 
 error_reporting(E_ALL); // Error/Exception engine, always use E_ALL
 ?>
@@ -17,10 +17,10 @@ error_reporting(E_ALL); // Error/Exception engine, always use E_ALL
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $app_title; ?></title>
+    <title><?php echo $app_heading; ?></title>
     <!-- Core CSS - Include with every page -->
     <link href="../assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
-    <link href="../assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="../assets/font-awesome2/css/all.css" rel="stylesheet" />
     <link href="../assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet" />
     <link href="../assets/css/style.css" rel="stylesheet" />
       <link href="../assets/css/main-style.css" rel="stylesheet" />

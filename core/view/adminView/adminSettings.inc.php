@@ -1,6 +1,6 @@
 <?php 
 require_once 'adminHeader.inc.php';
-
+$userObject= new UserController();
 ?>
 
 <body>
@@ -60,7 +60,8 @@ require_once 'adminHeader.inc.php';
                                 <img src="../assets/img/user.jpg" alt="">
                             </div>
                             <div class="user-info">
-                                <div><h4><?php echo $arr['full_name']; ?></h4></div>
+                                <div><h4><?php $arr= $userObject->getUserData($_SESSION['username']); 
+                                echo $arr['full_name']; ?></h4></div>
                                 <div class="user-text-online">
                                     <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
                                 </div>
@@ -94,7 +95,7 @@ require_once 'adminHeader.inc.php';
                 <!-- Page Header -->
                 <div class="col-lg-12">
                     <h1 class="page-header">Settings</h1>
-                    <?php getNotification(); ?>
+                    <?php $userObject->getNotification(); ?>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#addUser">Add User</button>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDepartments">Manage Departments</button>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDesignations">Manage Designations</button>
@@ -117,7 +118,7 @@ require_once 'adminHeader.inc.php';
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php getUsersList(); ?>
+                                        <?php $userObject->getUsersList(); ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -126,12 +127,12 @@ require_once 'adminHeader.inc.php';
                     </div>
                     <!--End Advanced Tables -->
 
-<!-- Update Item Record Modal Alert Start -->
+<!-- Update User Record Modal Alert Start -->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                             <h4 class="modal-title" id="myModalLabel"> Update User Record</h4>
                                         </div>
                                         <div class="modal-body">
@@ -143,7 +144,26 @@ require_once 'adminHeader.inc.php';
                                     </div>
                                 </div>
                             </div>
-                        <!-- Update Item Record Modal Alrt End -->
+                        <!-- Update User Record Modal Alrt End -->
+    
+<!-- View User Record Modal Alert Start -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> View User Record</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        
+                                       
+                                        
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- View User Record Modal Alrt End -->
                        
                 </div>
                 <!--End Page Header -->
@@ -158,9 +178,9 @@ require_once 'adminHeader.inc.php';
     <?php require_once 'adminFooter.inc.php' ?>
     
     <script>
-    $(document).ready(function(){
+   $(document).ready(function(){    
+ $("body").on("click", ".userinfo", function(event){ 
 
-$('.userinfo').click(function(){
   
   var userid = $(this).data('id');
 
@@ -174,15 +194,57 @@ $('.userinfo').click(function(){
      $('.modal-body').html(response);
 
      // Display Modal
-     $('#updateModal').modal('show'); 
+     $('#updateModal').modal('show');  
      
    }
- });
+
+});
+$("body").on("click", "#close", function(event){ 
+
+$('#updateModal').modal('hide');
+location.reload();
 });
 });
 
+
+});    
+
 </script>
-    
+
+<script>
+   $(document).ready(function(){    
+ $("body").on("click", ".userdetail", function(event){ 
+
+  
+  var userid = $(this).data('id');
+
+  // AJAX request
+  $.ajax({
+   url: '../core/view/ajaxDetailUser',
+   type: 'post',
+   data: {userid: userid},
+   success: function(response){ 
+     // Add response in Modal body
+     $('.modal-body').html(response);
+
+     // Display Modal
+     $('#detailModal').modal('show');  
+     
+   }
+
+});
+$("body").on("click", "#close", function(event){ 
+
+$('#detailModal').modal('hide');
+location.reload();
+});
+});
+
+
+});    
+
+</script>
+
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 <?php 
 require_once 'adminHeader.inc.php';
-
+$userObject= new UserController();
 ?>
 
 <body>
@@ -60,7 +60,8 @@ require_once 'adminHeader.inc.php';
                                 <img src="../assets/img/user.jpg" alt="">
                             </div>
                             <div class="user-info">
-                                <div><h4><?php echo $arr['full_name']; ?></h4></div>
+                                <div><h4><?php $arr= $userObject->getUserData($_SESSION['username']); 
+                                echo $arr['full_name']; ?></h4></div>
                                 <div class="user-text-online">
                                     <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
                                 </div>
@@ -94,7 +95,7 @@ require_once 'adminHeader.inc.php';
                 <!-- Page Header -->
                 <div class="col-lg-12">
                     <h1 class="page-header">Dashboard</h1>
-                    <?php getNotification(); ?>
+                    <?php $userObject->getNotification(); ?>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#addUser">Add User</button>
                                     <!-- Advanced Tables -->
                                     <div class="panel panel-default">

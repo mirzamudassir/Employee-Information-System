@@ -28,4 +28,6 @@ require_once(APP_ROOT . "/view/renderView.php");
 //creating the instance of Database connection to be used throughout the Application.
 $instance= Db::getDbInstance();
 $link= $instance->openDbConnection();
+
+date_default_timezone_set("Asia/Karachi");
 ?>

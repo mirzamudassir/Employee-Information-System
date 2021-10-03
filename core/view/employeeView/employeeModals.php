@@ -1,7 +1,8 @@
 <?php
 require_once 'employeeHeader.php';
 before_every_protected_page();
-$arr= getUserData($_SESSION['username']); 
+$userObject= new UserController();
+$arr= $userObject->getUserData($_SESSION['username']); 
 ?>
 
 <html>
@@ -34,7 +35,7 @@ $arr= getUserData($_SESSION['username']);
                                         <div class="modal-body">
                                         
                                        <?php 
-                                            $user= getUserData($_SESSION['username']);
+                                            $user= $userObject->getUserData($_SESSION['username']);
                                             echo "Name: " . $user['full_name'] . "<br>";
                                             echo "Designation: " . $user['designation'] . "<br>";
                                             echo "Contact No: " . $user['contact'] . "<br>";

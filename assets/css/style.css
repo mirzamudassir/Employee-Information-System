@@ -364,3 +364,17 @@ table.dataTable thead .sorting:after {
 .title-red{
     color: red;
 }
+
+.icon-color{
+    color: #428bca;
+}
+
+.div-right-30{
+    text-align: right;
+    width: 30%;
+}
+
+.div-center-30{
+    margin-left: 30%;
+    width: 30%;
+}

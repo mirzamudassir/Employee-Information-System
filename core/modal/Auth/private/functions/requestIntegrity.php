@@ -94,4 +94,22 @@ else{
 $link= NULL;
 }
 
+
+function isUserAlreadyExist($username){
+    global $link;
+
+    $stmt= $link->prepare("SELECT username FROM `user_accounts` WHERE username= :username");
+    $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if($stmt->rowCount() > 0){
+        return TRUE;
+    }else{
+        return FALSE;
+    }
+
+    //dispose the db connection
+    $link= NULL;
+}
+
 ?>

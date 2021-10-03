@@ -1,62 +1,24 @@
 <?php
 require_once(realpath(dirname(__FILE__) . '/..') . '/modal/initialize.php');
+require_once 'classes/User.class.php';
+global $link;
+class UserController extends User{
 
-  function getUserData($username){
-    global $link;
 
-    $query= $link->prepare("SELECT * FROM `user_accounts` WHERE username= :username");
-    $query->bindParam(":username", $username, PDO::PARAM_STR);
-    $query->execute();
-  
-    while($row= $query->fetch()){
-    
-    $id= $row['id'];
-    $user= $row['username'];
-    $full_name= $row['full_name'];
-    $designation= $row['designation'];
-    $contact= $row['contact_no'];
-  
+  public function getUserData($username){
+    return parent::getUserData($username);
   }
-  $result= array("id"=>"$id", "username"=>"$user", "full_name"=>"$full_name","designation"=> "$designation", "contact"=>"$contact");
-  return $result;
 
-  //dispose the db connection
-  $link= NULL;
-
+  public function getUsersList(){
+    return parent::getUsersList();
   }
-  
-  function getUsersList(){
-    global $link;
 
-    $query= $link->prepare("SELECT * FROM `user_accounts`");
-    $query->execute();
-  
-    while($row= $query->fetch()){
-    
-    $id= $row['id'];
-    $username= $row['username'];
-    $full_name= $row['full_name'];
-    $access_level= $row['access_level'];
-    $account_status= $row['account_status'];
-
-   echo "<tr class='odd gradeX'>
-    <td>$username</td>
-    <td>$full_name</td>
-    <td>$access_level</td>
-    <td>$account_status</td>
-    <td><button data-id='$id' class='userinfo btn btn-success'>Update</button></td>
-</tr>";
-
+  public function getUserDetails($userID){
+    return parent::getUserDetails($userID);
   }
-  //$result= array("barcode"=>"$barcode", "item_name"=>"$item_name", "description"=>"$description", "catagory"=>"$catagory", "unit_purchase_cost"=>"$unit_purchase_cost", "unit_selling_price"=>"$unit_selling_price", "tax_group"=>"$tax_group", "posted_by"=>"$posted_by", "status"=>"$status");
-
-  //dispose the db connection
-  $link= NULL;
-}
-
 
 //return the registered departments data
-function getDepartments($id){
+public function getDepartments($id){
   if(isAdminValid($id)){
   global $link;
 
@@ -82,7 +44,7 @@ function getDepartments($id){
     </tr>";
   }
 }else{
-  header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
             exit();
             return false;
 }
@@ -92,7 +54,7 @@ function getDepartments($id){
 
 
 //return the registered designations and pay scale data
-function getDesignations($id){
+public function getDesignations($id){
   if(isAdminValid($id)){
   global $link;
 
@@ -103,12 +65,14 @@ function getDesignations($id){
     $desigID= $row['id'];
     $designation_name= $row['designation_name'];
     $pay_scale= $row['pay_scale'];
+    $basic_salary= $row['basic_salary'];
     $enrolled_employees= $row['enrolled_employees'];
 
     echo "<tr>
    <form action='../core/view/dataParser?f=deleteDesignation' method='POST'>
     <td>$designation_name</td>
     <td>$pay_scale</td>
+    <td>$basic_salary</td>
     <td>$enrolled_employees</td>
     <input type='hidden' value='$desigID' name='id'>
     <td><input type='submit' name='deleteDepartment' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?' value='Delete'></td>
@@ -116,7 +80,7 @@ function getDesignations($id){
     </tr>";
   }
 }else{
-  header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
             exit();
             return false;
 }
@@ -125,7 +89,7 @@ function getDesignations($id){
 
 
 //return the department values for dropdown list
-function getDepartmentsValues($id){
+public function getDepartmentsValues($id){
   if(isAdminValid($id)){
   global $link;
 
@@ -140,7 +104,7 @@ function getDepartmentsValues($id){
     ";
   }
 }else{
-  header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
             exit();
             return false;
 }
@@ -149,7 +113,7 @@ function getDepartmentsValues($id){
 
 
 //return the designation values for dropdown list
-function getDesignationValues($id){
+public function getDesignationValues($id){
   if(isAdminValid($id)){
   global $link;
 
@@ -164,7 +128,7 @@ function getDesignationValues($id){
     ";
   }
 }else{
-  header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
             exit();
             return false;
 }
@@ -173,7 +137,7 @@ function getDesignationValues($id){
 
 
 //return the Pay Scale values for dropdown list
-function getPayScaleValues($id){
+public function getPayScaleValues($id){
   if(isAdminValid($id)){
   global $link;
 
@@ -188,7 +152,7 @@ function getPayScaleValues($id){
     ";
   }
 }else{
-  header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
             exit();
             return false;
 }
@@ -197,7 +161,7 @@ function getPayScaleValues($id){
 
 
 
-  function getErrorNotification(){
+public function getErrorNotification(){
     if(isset($_SESSION['notifStatus']) && $_SESSION['notifStatus'] != ''){
       $flag= $_SESSION['notifStatus'];
       
@@ -205,11 +169,13 @@ function getPayScaleValues($id){
                           <script>  
                           var flag= <?php echo json_encode($flag); ?>
                           
-                   swal({
-                   title: eval(JSON.stringify(flag)),
-                   icon: "error",
-                   button: "Ok",
-                   });
+                          swal({
+                           
+                            icon: 'error',
+                            title: eval(JSON.stringify(flag[0])),
+                            text: eval(JSON.stringify(flag[1])),
+                            timer: 3000 //3 seconds
+                          });
                       </script>
 <?php
 
@@ -219,12 +185,12 @@ unset($_SESSION['notifStatus']);
   }
 
   
-  function getNotification(){
+  public function getNotification(){
     if(isset($_SESSION['notifStatus']) && $_SESSION['notifStatus'] != ''){
       $flag= $_SESSION['notifStatus'];
 
-      if($flag=="Error"){
-        getErrorNotification();
+      if($flag[0]=="Error"){
+        $this->getErrorNotification();
       }else{
       
                             ?>
@@ -232,7 +198,7 @@ unset($_SESSION['notifStatus']);
                           var flag= <?php echo json_encode($flag); ?>
                           
                    swal({
-                   title: eval(JSON.stringify(flag)),
+                   title: JSON.stringify(flag),
                    icon: "success",
                    button: "Ok",
                    });
@@ -244,13 +210,90 @@ unset($_SESSION['notifStatus']);
   }
   }
 }
+
+
+
+//this function generates the Employee ID for new User
+public function generateEmployeeID(){
+  global $link;
+
+  $stmt= $link->prepare("SELECT employeeID FROM `employees` ORDER BY employeeID DESC LIMIT 1");
+  $stmt->execute();
+
+  if($stmt->rowCount() == 0){
+    $employeeID= "EMP-001";
+    return $employeeID;
+  }else{
+    $row= $stmt->fetch();
+    $lastEmployeeID= $row['employeeID'];
+
+    //increments the numeric part of Employee ID by 1
+    
+function increment($matches)
+{
+    if(isset($matches[1]))
+    {
+        $length = strlen($matches[1]);
+        return sprintf("%0".$length."d", ++$matches[1]);
+    }    
+}
+
+$employeeID =  preg_replace_callback( "|(\d+)|", "increment", $lastEmployeeID);
+    return $employeeID;
+
+
+  }
+}
+
+
+
+//this function will get the employee pay scale and salary according to designation
+public function getEmployeeScaleAndSalary($designation){
+  global $link;
+
+  $stmt= $link->prepare("SELECT * FROM `designations` WHERE designation_name= :designation_name");
+  $stmt->bindParam(":designation_name", $designation, PDO::PARAM_STR);
+  $stmt->execute();
+  
+  $row= $stmt->fetch();
+  $payScale= $row['pay_scale'];
+  $basic_salary= $row['basic_salary'];
+
+  $array= [
+    "pay_scale" => $payScale,
+    "basic_salary" => $basic_salary,
+  ];
+
+  return $array;
+}
+
+
+public function updateDesignationEMPCount(){
+  global $link;
+
+  $stmt= $link->prepare("SELECT * FROM `designations` WHERE designation_name= :designation_name");
+  $stmt->bindParam(":designation_name", $designation, PDO::PARAM_STR);
+  $stmt->execute();
+  
+  $row= $stmt->fetch();
+  $payScale= $row['pay_scale'];
+  $basic_salary= $row['basic_salary'];
+
+  $array= [
+    "pay_scale" => $payScale,
+    "basic_salary" => $basic_salary,
+  ];
+
+  return $array;
+}
+
   
   
-  $current_location= dirname(__FILE__);
+  /**$current_location= dirname(__FILE__);
   if($current_location== 'F:\xampp\htdocs\project\core\controller' OR $current_location== 'F:\xampp\htdocs\project\core\view'){
     
   }else{
     require_once('footer.php');
-  }
-
+  }**/
+}
 ?>
