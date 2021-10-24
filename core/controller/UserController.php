@@ -1,6 +1,7 @@
 <?php
 require_once(realpath(dirname(__FILE__) . '/..') . '/modal/initialize.php');
 require_once 'classes/User.class.php';
+require_once 'classes/employee.class.php';
 global $link;
 class UserController extends User{
 
@@ -89,8 +90,8 @@ public function getDesignations($id){
 
 
 //return the department values for dropdown list
-public function getDepartmentsValues($id){
-  if(isAdminValid($id)){
+public function getDepartmentsValues(){
+
   global $link;
 
   $stmt= $link->prepare("SELECT * FROM `departments` WHERE visibility= 'Visible'");
@@ -98,16 +99,14 @@ public function getDepartmentsValues($id){
 
   while($row= $stmt->fetch()){
     $department_name= $row['department_name'];
+    $department_code= $row['department_code'];
+
+    $department_name_detailed= $department_code . " " . $department_name;
 
     echo "
-    <option value='$department_name' name='department_name'>$department_name</option>
+    <option value='$department_name' name='department_name'>$department_name_detailed</option>
     ";
   }
-}else{
-  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
-            exit();
-            return false;
-}
 
 }
 

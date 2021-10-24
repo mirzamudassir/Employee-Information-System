@@ -21,6 +21,7 @@ require_once(PRIVATE_PATH . "/functions/validation_functions.php");
 require_once(PRIVATE_PATH . "/functions/xss_sanitize_functions.php");
 require_once(PRIVATE_PATH . "/functions/requestIntegrity.php");
 require_once(APP_ROOT . "/controller/UserController.php");
+require_once(APP_ROOT . "/controller/EmployeeController.php");
 require_once(APP_ROOT . "/controller/postController.php");
 require_once(APP_ROOT . "/modal/Auth/Db.php");
 require_once(APP_ROOT . "/view/renderView.php");

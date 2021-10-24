@@ -1,29 +1,29 @@
 <?php
 require_once(APP_ROOT . "/modal/initialize.php");
 
-class User{
+class Employee{
     
-    protected function getUsersList(){
+    protected function getEmployeesList(){
         global $link;
     
-        $query= $link->prepare("SELECT * FROM `user_accounts`");
+        $query= $link->prepare("SELECT * FROM `employees`");
         $query->execute();
       
         while($row= $query->fetch()){
         
         $id= $row['id'];
-        $username= $row['username'];
+        $employeeID= $row['employeeID'];
         $full_name= $row['full_name'];
-        $access_level= $row['access_level'];
-        $account_status= $row['account_status'];
+        $designation= $row['designation'];
+        $department= $row['department'];
+
     
        echo "<tr class='odd gradeX'>
-        <td>$username</td>
+        <td>$employeeID</td>
         <td>$full_name</td>
-        <td>$access_level</td>
-        <td>$account_status</td>
-        <td><button data-id='$id' class='userinfo icon-color'><i class='fa fa-edit'></i></button>
-        <button data-id='$id' class='userdetail icon-color'><i class='fa fa-eye'></i></button>
+        <td>$designation</td>
+        <td>$department</td>
+        <td><button data-id='$id' class='userinfo icon-color'><i class='fa fa-plus'></i></button>
         </td>
     </tr>";
     

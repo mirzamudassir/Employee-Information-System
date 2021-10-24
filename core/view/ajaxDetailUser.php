@@ -33,12 +33,13 @@ echo "
 <table style='width:100%'>
   
   <tr>
-    <td>Username</td>
-    <td><b>$username</b></td>
-    <td>Employee ID</td>
+    <td>Employee ID : </td>
     <td><b>$employeeID</b></td>
-    <td>Education</td>
-    <td><img src='$profile_picture' width='130px' height='150px'></td>
+    <td>Full Name : </td>
+    <td><b>$full_name</b></td>
+    <td>Education : </td>
+    <td><b>$education</b></td>
+    
   </tr>
   <tr></tr>
   <tr></tr>
