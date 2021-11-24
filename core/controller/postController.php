@@ -18,11 +18,9 @@ $userObject= new UserController();
         //get the pay scale and net salary according to designation
         $data= $userObject->getEmployeeScaleAndSalary($designation);
         $pay_scale= $data["pay_scale"];
-
-        $profile_picture_link= substr($profile_picture, 3);
         
         //details of registering authority
-        $registered_by= $_SESSION['full_name'];
+        $registered_by= $_SESSION['username'];
         $registered_at= date("F j, Y, g:i a");
 
 
@@ -51,7 +49,7 @@ $userObject= new UserController();
         $stmt->bindParam(":department", $department, PDO::PARAM_STR);
         $stmt->bindParam(":designation", $designation, PDO::PARAM_STR);
         $stmt->bindParam(":pay_scale", $pay_scale, PDO::PARAM_STR);
-        $stmt->bindParam(":profile_picture", $profile_picture_link, PDO::PARAM_STR);
+        $stmt->bindParam(":profile_picture", $profile_picture, PDO::PARAM_STR);
         $stmt->bindParam(":registered_by", $registered_by, PDO::PARAM_STR);
         $stmt->bindParam(":registered_at", $registered_at, PDO::PARAM_STR);
     
@@ -105,7 +103,7 @@ $userObject= new UserController();
                     $query->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
                     //update the employees table
-                    $last_edit_by= $_SESSION['full_name'];
+                    $last_edit_by= $_SESSION['username'];
                     $last_edit_at= date("F j, Y, g:i a");
 
                     $stmt= $link->prepare("UPDATE `employees` SET full_name= :full_name, education= :education,
@@ -144,7 +142,7 @@ $userObject= new UserController();
                     $query->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
                     //update the employees table
-                    $last_edit_by= $_SESSION['full_name'];
+                    $last_edit_by= $_SESSION['username'];
                     $last_edit_at= date("F j, Y, g:i a");
 
                     $stmt= $link->prepare("UPDATE `employees` SET full_name= :full_name, education= :education,
@@ -287,6 +285,43 @@ $userObject= new UserController();
                     }
                     //dispose the db connection
                     $link= NULL;
+                    }
+
+
+                    function markAttendance($employeeID, $punch_in_timestamp){
+                        global $link;
+
+                        $stmt= $link->prepare("INSERT INTO `attendance_sheet` (employeeID, punch_in_timestamp) 
+                        VALUES (:employeeID, :punch_in_timestamp)");
+                        $stmt->bindParam(":employeeID", $employeeID);
+                        $stmt->bindParam(":punch_in_timestamp", $punch_in_timestamp);
+
+                        if($stmt->execute()){
+                            $_SESSION['notifStatus']= "Punched In";
+                            redirect_to("../../public/attendanceManager");
+                        }
+
+                        //dispose the db connection
+                        $link= NULL;
+                    }
+
+
+                    function markAttendanceOut($employeeID, $punch_out_timestamp){
+                        global $link;
+
+                        $stmt= $link->prepare("UPDATE `attendance_sheet` SET punch_out_timestamp= :punch_out_timestamp
+                         WHERE employeeID= :employeeID");
+
+                        $stmt->bindParam(":punch_out_timestamp", $punch_out_timestamp);
+                        $stmt->bindParam(":employeeID", $employeeID);
+
+                        if($stmt->execute()){
+                            $_SESSION['notifStatus']= "Punched Out";
+                            redirect_to("../../public/attendanceManager");
+                        }
+
+                        //dispose the db connection
+                        $link= NULL;
                     }
     
 ?>

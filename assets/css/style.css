@@ -338,6 +338,18 @@ table.dataTable thead .sorting:after {
     margin: 15px 0;
 }
 
+.to-left-70{
+
+    display: inline-block;
+    width: 71%;
+}
+
+.to-left-51{
+
+    display: inline-block;
+    width: 50%;
+}
+
 .to-left-50{
 
     display: inline-block;

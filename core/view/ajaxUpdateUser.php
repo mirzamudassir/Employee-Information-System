@@ -180,8 +180,8 @@ if($designation === 'Administrator'){
  <label>Access Level <span class='title-red'>*</span></label>
      <select class='form-control' name='access_level' required>
          <option value='$access_level'>$access_level</option>
-         <option value='Administrator'>Administrator</option>
-         <option value='Employee'>Employee</option>
+         <option value='ADMIN'>ADMIN</option>
+         <option value='USER'>USER</option>
      </select>
     
  </div>

@@ -14,7 +14,7 @@ function renderView($userID, $accessLevel, $callBackURL){
                 include "$rootAdrr/project/core/view/adminView/admin$callBackURL.inc.php";
 
             }else{
-                header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+                header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
                 exit();
                 return false;
             }
@@ -27,9 +27,9 @@ function renderView($userID, $accessLevel, $callBackURL){
             if(isEmployeeValid($userID) === TRUE){
 
                 $sessID= session_id() . $sessSalt;
-                include "$rootAdrr/project/core/view/employeeView/employee$callBackURL.php";
+                include "$rootAdrr/project/core/view/employeeView/employee$callBackURL.inc.php";
             }else{
-                header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+                header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
                 exit();
                 return false;
             }
@@ -37,7 +37,7 @@ function renderView($userID, $accessLevel, $callBackURL){
             break;
         
             default:
-            header("Location: http://localhost:8080/project/public/error?error=ERR_ACCESS_DENIED");
+            header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
                 exit();
             return false;
             

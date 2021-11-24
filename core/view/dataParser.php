@@ -167,6 +167,22 @@ switch($func){
             deleteDesignation($desgID);
             break;
 
+        case 'markAttendance':
+
+            $employeeID= trim($_POST['employeeID']);
+            $punch_in_timestamp= trim($_POST['punch_in_timestamp']);
+
+            markAttendance($employeeID, $punch_in_timestamp);
+
+            break;
+        case 'markAttendanceOut':
+            $employeeID= trim($_POST['employeeID']);
+            $punch_out_timestamp= trim($_POST['punch_out_timestamp']);
+            
+            markAttendanceOut($employeeID, $punch_out_timestamp);
+
+            break;
+
     default:
 
     echo "ERROR: ERR_DATAPARSER";

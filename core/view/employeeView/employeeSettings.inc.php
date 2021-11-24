@@ -1,8 +1,17 @@
 <?php 
-require_once 'employeeHeader.php';
-
+require_once 'employeeHeader.inc.php';
+$userObject= new UserController();
 ?>
-
+<style>
+        table {
+            width: 500px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
 <body>
     <!--  wrapper -->
     <div id="wrapper">
@@ -57,10 +66,10 @@ require_once 'employeeHeader.php';
                         <!-- user image section-->
                         <div class="user-section">
                             <div class="user-section-inner">
-                                <img src="<?php echo $arr['profile_picture']; ?>" alt="Profile Picture" height='50px' width='60px'> 
+                            <img src="<?php echo $arr['profile_picture']; ?>" alt="Profile Picture" height='50px' width='60px'> 
                             </div>
                             <div class="user-info">
-                                <div><h4><?php echo $arr['full_name']; ?></h4></div>
+                                <div><h4><?php echo $arr['username']; ?></h4></div>
                                 <div class="user-text-online">
                                     <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
                                 </div>
@@ -93,18 +102,64 @@ require_once 'employeeHeader.php';
             <div class="row">
                 <!-- Page Header -->
                 <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard</h1>
-                    <?php getNotification(); ?>
-                    
-                                    <!-- Advanced Tables -->
-                                    <div class="panel panel-default">
+                    <h1 class="page-header">Profile</h1>
+
+                                        <!--Basic Tabs   -->
+                                        <div class="panel panel-default">
                         <div class="panel-heading">
-                             Items
+                            Personal Information
                         </div>
-                        
-                       Dashboard
+                        <div class="panel-body">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#profile" data-toggle="tab">Profile</a>
+                                </li>
+                                <li><a href="#settings" data-toggle="tab">Settings</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="profile">
+                                 <?php $arr= $userObject->getUserData($_SESSION['username']); ?>
+                                 <div class="row show-grid">
+                                
+                                <div class="col-md-4 col-md-offset-4">
+                                <table>
+        <thead>
+            <tr>
+                <th>Full Name : </th>
+                <th><?php echo $arr['full_name']; ?></b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td> Username : </td>
+            <td><?php echo $arr['username']; ?></b></td>
+            </tr>
+            <tr>
+                <td>Designation : </td>
+                <td><?php echo $arr['designation']; ?></b></td>
+            </tr>
+            <tr>
+                <td>Contact No : </td>
+                <td><?php echo $arr['contact']; ?></b></td>
+            </tr>
+        </tbody>
+        
+    </table>
+                                
+                                <br>
+                                <br>
+                                </div>
+                            </div>
+                                    
+                                </div>
+                                <div class="tab-pane fade" id="settings">
+                                    <h4>Access Denied!</h4>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <!--End Advanced Tables -->
+                    <!--End Basic Tabs   -->
                 </div>
                 <!--End Page Header -->
             </div>        
@@ -115,7 +170,8 @@ require_once 'employeeHeader.php';
     </div>
     <!-- end wrapper -->
 
-    <?php require_once 'employeeFooter.php' ?>
+    <?php require_once 'employeeFooter.inc.php' ?>
+    
 </body>
 
 </html>

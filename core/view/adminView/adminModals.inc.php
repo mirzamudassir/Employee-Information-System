@@ -2,6 +2,7 @@
 require_once 'adminHeader.inc.php';
 before_every_protected_page(); 
 $userControllerObject= new UserController();
+$userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
 ?>
 
 <html>
@@ -281,6 +282,103 @@ $userControllerObject= new UserController();
                                 </div>
                             </div>
                         <!-- Manage Designations Modal Alrt End -->
+
+
+                        <!-- Mark Attendance Modal Alert Start -->
+<div class="modal fade" id="markAttendance" tabindex="-1" role="dialog" aria-labelledby="markAttendance" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Mark Attendance</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <form action="../core/view/dataParser?f=markAttendance" method="POST">
+                                        <div class="form-group to-left-20">
+                                            <label>Emp. # <span class="title-red">*</span></label>
+                                            <input class="form-control" name="employeeID" value='<?php echo $userDetails['employeeID']; ?>' type="varchar" disabled>
+                                            <input type='hidden' value='<?php echo $userDetails['employeeID']; ?>' name='employeeID'>
+                                        </div>
+                                        <div class="form-group to-left-51">
+                                            <label>Full Name <span class="title-red">*</span></label>
+                                            <input class="form-control" name="full_name" value='<?php echo $userDetails['full_name']; ?>' type="varchar" disabled>
+                                            
+                                        </div>
+                            
+                                        <div class="form-group to-left-70">
+                                            <label>Current Timestamp <span class="title-red">*</span></label>
+                                            <input class="form-control" name="designation" value='<?php echo date("F j, Y, g:i a"); ?>' type="varchar" disabled>
+                                            <input type='hidden' value='<?php echo date("F j, Y, g:i a"); ?>' name='punch_in_timestamp'>
+                                        </div>
+
+                                       <input type="submit" name="punchIn" class="btn btn-success button-right-50" value="Punch In">
+                                        </form>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Mark Attendance Modal Alrt End -->
+
+
+                        <!-- Mark Attendance Out Modal Alert Start -->
+<div class="modal fade" id="markAttendanceOut" tabindex="-1" role="dialog" aria-labelledby="markAttendanceOut" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Mark Attendance</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <?php
+                                            $attendanceStatus= $userControllerObject->getAttendanceStatus('', $userDetails['employeeID']);
+                                            if($attendanceStatus === 'DENIED'){ ?>
+                                                <label class='title-red'> You have already Punched Out.</label>
+
+                                            <?php }else{ ?>
+
+                                        <form action="../core/view/dataParser?f=markAttendanceOut" method="POST">
+                                        <div class="form-group to-left-20">
+                                            <label>Emp. # <span class="title-red">*</span></label>
+                                            <input class="form-control" name="employeeID" value='<?php echo $userDetails['employeeID']; ?>' type="varchar" disabled>
+                                            <input type='hidden' value='<?php echo $userDetails['employeeID']; ?>' name='employeeID'>
+                                        </div>
+                                        <div class="form-group to-left-51">
+                                            <label>Full Name <span class="title-red">*</span></label>
+                                            <input class="form-control" name="full_name" value='<?php echo $userDetails['full_name']; ?>' type="varchar" disabled>
+                                            
+                                        </div>
+
+                                        <div class="form-group to-left-70">
+                                            <label>Punch In Timestamp <span class="title-red">*</span></label>
+                                            <input class="form-control" name="last_timestamp" value='<?php echo $userControllerObject->getAttendanceStatus('details', $userDetails['employeeID']) ?>' type="varchar" disabled>
+                                        </div>
+                            
+                                        <div class="form-group to-left-70">
+                                            <label>Current Punch Out Timestamp <span class="title-red">*</span></label>
+                                            <input class="form-control" name="punch_out_timestamp" value='<?php echo date("F j, Y, g:i a"); ?>' type="varchar" disabled>
+                                            <input type='hidden' value='<?php echo date("F j, Y, g:i a"); ?>' name='punch_out_timestamp'>
+                                        </div>
+
+                                       <input type="submit" name="punchOut" class="btn btn-success button-right-50" value="Punch Out">
+                                        </form>
+
+                                            <?php } ?>
+                                        
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Mark Attendance Out Modal Alrt End -->
 
 
 

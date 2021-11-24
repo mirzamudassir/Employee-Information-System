@@ -14,6 +14,7 @@ if(isset($_POST['userid'])){
       $full_name= $detailsArray['full_name'];
       $education= $detailsArray['education'];
       $department= $detailsArray['department'];
+      $department_code= $detailsArray['department_code'];
       $designation= $detailsArray['designation'];
       $pay_scale= $detailsArray['pay_scale'];
       $allowances= $detailsArray['allowances'];
@@ -26,35 +27,64 @@ if(isset($_POST['userid'])){
       $email= $detailsArray['email'];
       $access_level= $detailsArray['access_level'];
       $account_status= $detailsArray['account_status'];
+      $remarks= $detailsArray['remarks'];
 
 echo "
 
-<div style='width:30%; float:right;'>
-<table style='width:100%'>
-<tr>
-<td><img src='$profile_picture' alt='User Image' width='150px' height='150px' style='float:right;'></td>
+<table style='width:75%; font-size: 1em; display:inline-block;'>
+<tr style='line-height: 2em;'>
+<td><b>Emp #</b> $employeeID &nbsp;</td>
+<td><b>Name:</b> $full_name</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Education:</b> $education &nbsp;</td>
+<td><b>Dept:</b> $department_code $department</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Designation:</b> $designation &nbsp;</td>
+<td><b>Pay Scale:</b> $pay_scale</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Allowances:</b> $allowances &nbsp;</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Access Level:</b> $access_level &nbsp;</td>
+<td><b>Account Status:</b> $account_status</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Contact:</b> $contact &nbsp;</td>
+<td><b>Email:</b> $email</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Reg. By:</b> $registered_by &nbsp;</td>
+<td><b>Reg. Date:</b> $registered_at</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Updated By:</b> $last_edit_by &nbsp;</td>
+<td><b>Update Date:</b> $last_edit_at</td>
+</tr>
+
+<tr style='line-height: 2em;'>
+<td><b>Remarks:</b> $remarks &nbsp;</td>
 </tr>
 </table>
-</div>
 
-<div style='width:65%; float:left;'>
-<table style='width:100%'>
+<table style='display:flex; float:right'>
 <tr>
-<td>Emp# : $employeeID</td>
-<td>Emp# : $employeeID</td>
+<td><img src='$profile_picture' alt='profile_picture' width='200px' height='200px'></td>
 </tr>
-
-<tr>
-<td>Emp# : $employeeID</td>
-<td>Emp# : $employeeID</td>
-</tr>
-  
 </table>
-</div>
 
 
 
-</div>
+
 
 
  <div class='modal-footer'>

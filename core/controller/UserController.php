@@ -220,7 +220,7 @@ public function generateEmployeeID(){
   $stmt->execute();
 
   if($stmt->rowCount() == 0){
-    $employeeID= "EMP-001";
+    $employeeID= "EIS-001";
     return $employeeID;
   }else{
     $row= $stmt->fetch();
@@ -284,6 +284,101 @@ public function updateDesignationEMPCount(){
   ];
 
   return $array;
+}
+
+public function getAttendanceStatus($query, $employeeID){
+  global $link;
+
+  $stmt= $link->prepare("SELECT * FROM `attendance_sheet` WHERE employeeID= :employeeID");
+  $stmt->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+  $stmt->execute();
+  
+  while($row= $stmt->fetch()){
+    $punch_in_timestamp= $row['punch_in_timestamp'];
+    $punch_out_timestamp= $row['punch_out_timestamp'];
+  }
+
+    if($query == 'details'){
+      return $punch_in_timestamp;
+
+    }else{
+      if(empty($punch_in_timestamp) === TRUE){
+
+        //January 01
+    $now= date("F j");
+  
+    $arr= explode(",", $punch_in_timestamp, 2);
+    $punch_in_timestamp= $arr[0];
+  
+    if($now > $punch_in_timestamp){
+      return TRUE;
+    }else{
+      return FALSE;
+    }
+  
+    }else if(empty($punch_out_timestamp) === FALSE){
+      $now= date("F j");
+      $arr= explode(",", $punch_out_timestamp, 2);
+      $punch_out_timestamp= $arr[0];
+
+      if($now <= $punch_out_timestamp){
+        return 'DENIED';
+      }else{
+        return TRUE;
+      }
+    }
+    }
+
+//dispose the db connection
+//$link= NULL;
+
+}
+
+
+public function getTodayAttendanceSheet(){
+  global $link;
+  $now= date("F j, Y");
+
+  $stmt= $link->prepare("SELECT * FROM `attendance_sheet` WHERE punch_in_timestamp LIKE '%$now%'");
+        $stmt->execute();
+      
+        while($row= $stmt->fetch()){
+        
+        $id= $row['id'];
+        $employeeID= $row['employeeID'];
+        $punch_in_timestamp= $row['punch_in_timestamp'];
+        $punch_out_timestamp= $row['punch_out_timestamp'];
+        
+        //12:00 am
+        $arr= explode(",", $punch_in_timestamp);
+        $punch_in= $arr[2];
+
+        if(empty($punch_out_timestamp) === FALSE){
+          $arr= explode(",", $punch_out_timestamp);
+          $punch_out= $arr[2];
+        }else{
+          $punch_out= '';
+        }
+
+        $stmt2= $link->prepare("SELECT full_name, designation FROM `employees` WHERE employeeID= :employeeID");
+        $stmt2->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+        $stmt2->execute();
+        while($row2= $stmt2->fetch()){
+          $full_name= $row2['full_name'];
+          $designation= $row2['designation'];
+        }
+
+    
+       echo "<tr class='odd gradeX'>
+        <td>$employeeID</td>
+        <td>$full_name</td>
+        <td>$designation</td>
+        <td>$punch_in</td>
+        <td>$punch_out</td>
+        </td>
+    </tr>";
+        }
+
 }
 
   

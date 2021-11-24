@@ -80,6 +80,7 @@ class User{
         $email= $row['email'];
         $access_level= $row['access_level'];
         $account_status= $row['account_status'];
+        $remarks= $row['remarks'];
       
       }
 
@@ -107,11 +108,19 @@ class User{
           $last_edit_at= $row2['last_edit_at'];
         }
 
+        //get department details from department table
+        $stmt2= $link->prepare("SELECT department_code FROM `departments` WHERE department_name='$department'");
+        $stmt2->execute();
+        while($row3= $stmt2->fetch()){
+          $department_code= $row3['department_code'];
+        }
+
+
       $result= array("id"=>"$id", "username"=>"$username", "employeeID" => "$employeeID", "full_name"=>"$full_name", 
-      "education" => "$education", "department" => "$department", "designation"=> "$designation", "pay_scale" => "$pay_scale"
+      "education" => "$education", "department" => "$department", "department_code"=>$department_code, "designation"=> "$designation", "pay_scale" => "$pay_scale"
       , "allowances" => "$allowances", "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
       "registered_at" => "$registered_at", "last_edit_by" => "$last_edit_by", "last_edit_at" => "$last_edit_at","contact_no"=>"$contact",
-      "email" => "$email", "access_level" => "$access_level", "account_status" => "$account_status");
+      "email" => "$email", "access_level" => "$access_level", "account_status" => "$account_status", "remarks"=>"$remarks");
       }
       return $result;
     

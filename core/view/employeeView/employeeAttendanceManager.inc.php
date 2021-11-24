@@ -1,6 +1,5 @@
 <?php 
-require_once 'adminHeader.inc.php';
-$userObject= new UserController();
+require_once 'employeeHeader.inc.php';
 $employeeObject= new EmployeeController();
 ?>
 
@@ -184,7 +183,7 @@ $employeeObject= new EmployeeController();
     </div>
     <!-- end wrapper -->
 
-    <?php require_once 'adminFooter.inc.php' ?>
+    <?php require_once 'employeeFooter.inc.php' ?>
     
     <script>
    $(document).ready(function(){    
