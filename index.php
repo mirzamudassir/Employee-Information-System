@@ -1,4 +1,4 @@
 <?php
 
-header("Location: http://localhost:8080/project/public");
+header("Location: http://localhost/project/public");
 ?>

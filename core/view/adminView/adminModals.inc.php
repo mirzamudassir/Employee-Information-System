@@ -63,13 +63,13 @@ $userControllerObject= new UserController();
 
                                         <div class="form-group to-left-50">
                                             <label>Username <span class="title-red">*</span></label>
-                                            <input class="form-control" id="txt_username" name="username" type="text" minlength="4" maxlength="15" required>
+                                            <input class="form-control" id="txt_username" name="username" type="text" minlength="4" maxlength="15" autocomplete="off" required>
                                             
                                         </div>
 
                                         <div class="form-group to-left-50">
                                             <label>Full Name <span class="title-red">*</span></label>
-                                            <input class="form-control" name="full_name" type="varchar" maxlength="30" required>
+                                            <input class="form-control" name="full_name" type="varchar" maxlength="30" autocomplete="off" required>
                                            
                                         </div>
 

@@ -16,7 +16,6 @@ if(isset($_POST['userid'])){
       $department= $detailsArray['department'];
       $designation= $detailsArray['designation'];
       $pay_scale= $detailsArray['pay_scale'];
-      $basic_salary= $detailsArray['basic_salary'];
       $allowances= $detailsArray['allowances'];
       $profile_picture= $detailsArray['profile_picture'];
       $registered_by= $detailsArray['registered_by'];
@@ -30,39 +29,33 @@ if(isset($_POST['userid'])){
 
 echo "
 
+<div style='width:30%; float:right;'>
 <table style='width:100%'>
-  
-  <tr>
-    <td>Employee ID : </td>
-    <td><b>$employeeID</b></td>
-    <td>Full Name : </td>
-    <td><b>$full_name</b></td>
-    <td>Education : </td>
-    <td><b>$education</b></td>
-    
-  </tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr style='line-height: 50px'>
-    <td>Employee ID</td>
-    <td>$employeeID</td>
-    <td>Designation</td>
-    <td>$designation</td>
-    <td>Full Name</td>
-    <td>$full_name</td>
-  </tr>
-  <tr>
-    <td>John</td>
-    <td>Doe</td>
-    <td>80</td>
-  </tr>
+<tr>
+<td><img src='$profile_picture' alt='User Image' width='150px' height='150px' style='float:right;'></td>
+</tr>
 </table>
+</div>
+
+<div style='width:65%; float:left;'>
+<table style='width:100%'>
+<tr>
+<td>Emp# : $employeeID</td>
+<td>Emp# : $employeeID</td>
+</tr>
+
+<tr>
+<td>Emp# : $employeeID</td>
+<td>Emp# : $employeeID</td>
+</tr>
+  
+</table>
+</div>
 
 
 
 </div>
+
 
  <div class='modal-footer'>
                                             

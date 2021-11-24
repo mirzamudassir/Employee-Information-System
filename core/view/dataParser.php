@@ -38,6 +38,7 @@ switch($func){
                     
 
                             if(move_uploaded_file($picture_tmpName, $profile_picture)){
+                                $profile_picture= substr($profile_picture, 3);
             
                                 postUser($username, $full_name, $last_education, $department,
                                 $designation, $profile_picture, $password, $contact, $email, $access_level, $account_status);
@@ -60,18 +61,76 @@ switch($func){
 
 
         case 'updateUser':
+            
 
             $usernameForUpdate= trim($_POST['usernameForUpdate']);
+            $username= trim($_POST['username']);
             $full_name= trim($_POST['full_name']);
-            $password= trim($_POST['password']);
+            $education= trim($_POST['education']);
+            $department= trim($_POST['department']);
             $designation= trim($_POST['designation']);
+            $pay_scale= trim($_POST['pay_scale']);
+            $profile_picture= basename($_FILES['profile_picture']['name']);
+            $picture_tmpName= $_FILES['profile_picture']['tmp_name'];
+            $email= trim($_POST['email']);
+            $access_level= trim($_POST['access_level']);
+            $account_status= trim($_POST['account_status']);
+            $password= trim($_POST['password']);
+            $remarks= trim($_POST['remarks']);
             $contact= trim($_POST['contact']);
 
             if(isset($_POST['deleteUser'])){
                 deleteUser($usernameForUpdate);
             }else{
+
+                if(strlen($profile_picture) === 0){
+                    //getting old picture path from database
+                    $userObj= new UserController();
+                    $userDetails= $userObj->getUserData($usernameForUpdate);
+                    $profile_picture= $userDetails['profile_picture'];
+
+                    UpdateUser($usernameForUpdate, $full_name, $education, $pay_scale, $profile_picture, $password, $contact, $email, 
+                    $access_level, $account_status, $remarks);
+
+                }else{
+                    $folderToUploadPicture= "../../assets/img/profilePictures/";
+                    $profile_picture= $folderToUploadPicture . $profile_picture;
+                    $imageFileType = strtolower(pathinfo($profile_picture,PATHINFO_EXTENSION));
+
+                // Allow certain file formats
+             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+
+                $arr= array("Error", $profile_picture);
+                        $_SESSION['notifStatus']= $arr;
+                        redirect_to("../../public/settings");
+                }else{
+
+                    // Check file size, max upload size is 1MB
+                    if ($_FILES["profile_picture"]["size"] < 1000000) {
+                    
+
+                            if(move_uploaded_file($picture_tmpName, $profile_picture)){
+                                $profile_picture= substr($profile_picture, 3);
+            
+                                UpdateUser($usernameForUpdate, $full_name, $education, $pay_scale, $profile_picture, $password, $contact, $email, 
+                                $access_level, $account_status, $remarks);
+                            }else{
+                                    $arr= array("Error", "There is an error in uploading Image.");
+                                    $_SESSION['notifStatus']= $arr;
+                                    redirect_to("../../public/settings");
+                                }
+                    
+
+                            
+                    }else{
+                        $arr= array("Error", "Image file size should be less than 1 MB");
+                        $_SESSION['notifStatus']= $arr;
+                        redirect_to("../../public/settings");
+                    }
+                }
+                }
     
-            UpdateUser($id, $password, $full_name, $designation, $contact);
+            
             }
             break;
 

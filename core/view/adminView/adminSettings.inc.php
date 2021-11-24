@@ -57,7 +57,7 @@ $userObject= new UserController();
                         <!-- user image section-->
                         <div class="user-section">
                             <div class="user-section-inner">
-                                <img src="../assets/img/user.jpg" alt="">
+                            <img src="<?php echo $arr['profile_picture']; ?>" alt="Profile Picture" height='50px' width='60px'> 
                             </div>
                             <div class="user-info">
                                 <div><h4><?php $arr= $userObject->getUserData($_SESSION['username']); 

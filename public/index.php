@@ -45,10 +45,10 @@ session_start();
                         <form action="../core/modal/Auth/validate" method="POST" accept-charset="utf-8">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Username" name="username" type="text" required autofocus>
+                                    <input class="form-control" placeholder="Username" name="username" type="text" required autofocus autocomplete="off">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="pwd" type="password" required>
+                                    <input class="form-control" placeholder="Password" name="pwd" type="password" required autocomplete="off">
                                 </div>
                                 
                                 <!-- Change this to a button or input when using this as a form -->

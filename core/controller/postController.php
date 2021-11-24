@@ -18,7 +18,6 @@ $userObject= new UserController();
         //get the pay scale and net salary according to designation
         $data= $userObject->getEmployeeScaleAndSalary($designation);
         $pay_scale= $data["pay_scale"];
-        $basic_salary= $data["basic_salary"];
 
         $profile_picture_link= substr($profile_picture, 3);
         
@@ -42,8 +41,8 @@ $userObject= new UserController();
 
         //secondly insert the relevant data in employees table
         $stmt= $link->prepare("INSERT INTO `employees` (username, employeeID, full_name, education, department, designation, 
-        pay_scale, basic_salary, profile_picture, registered_by, registered_at)
-        VALUES (:username, :employeeID, :full_name, :education, :department, :designation, :pay_scale, :basic_salary, :profile_picture, 
+        pay_scale, profile_picture, registered_by, registered_at)
+        VALUES (:username, :employeeID, :full_name, :education, :department, :designation, :pay_scale, :profile_picture, 
         :registered_by, :registered_at)");
         $stmt->bindParam(":username", $username, PDO::PARAM_STR);
         $stmt->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
@@ -52,7 +51,6 @@ $userObject= new UserController();
         $stmt->bindParam(":department", $department, PDO::PARAM_STR);
         $stmt->bindParam(":designation", $designation, PDO::PARAM_STR);
         $stmt->bindParam(":pay_scale", $pay_scale, PDO::PARAM_STR);
-        $stmt->bindParam(":basic_salary", $basic_salary, PDO::PARAM_STR);
         $stmt->bindParam(":profile_picture", $profile_picture_link, PDO::PARAM_STR);
         $stmt->bindParam(":registered_by", $registered_by, PDO::PARAM_STR);
         $stmt->bindParam(":registered_at", $registered_at, PDO::PARAM_STR);
@@ -90,18 +88,38 @@ $userObject= new UserController();
         $userObject= NULL;
         }
 
-            function updateUser($id, $password, $full_name, $designation, $contact){
+            function updateUser($usernameForUpdate, $full_name, $education,
+            $pay_scale, $profile_picture, $password, $contact, $email, $access_level, $account_status, $remarks){
                 global $link;
                 try{
 
-                if($password==''){
-                    $query= $link->prepare("UPDATE `user_accounts` SET full_name= :full_name, designation= :designation, contact_no= :contact_no WHERE id=:id");
+                if(empty($password) === TRUE){
+                    $query= $link->prepare("UPDATE `user_accounts` SET full_name= :full_name, contact_no= :contact_no,
+                    email= :email, access_level= :access_level, account_status= :account_status, remarks= :remarks WHERE username=:usernameForUpdate");
                     $query->bindParam(":full_name", $full_name, PDO::PARAM_STR);
-                    $query->bindParam(":designation", $designation, PDO::PARAM_STR);
                     $query->bindParam(":contact_no", $contact, PDO::PARAM_STR);
-                    $query->bindParam(":id", $id, PDO::PARAM_INT);
+                    $query->bindParam(":email", $email, PDO::PARAM_STR);
+                    $query->bindParam(":access_level", $access_level, PDO::PARAM_STR);
+                    $query->bindParam(":account_status", $account_status, PDO::PARAM_STR);
+                    $query->bindParam(":remarks", $remarks, PDO::PARAM_STR);
+                    $query->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
-                if($query->execute() === TRUE){
+                    //update the employees table
+                    $last_edit_by= $_SESSION['full_name'];
+                    $last_edit_at= date("F j, Y, g:i a");
+
+                    $stmt= $link->prepare("UPDATE `employees` SET full_name= :full_name, education= :education,
+                    pay_scale= :pay_scale, profile_picture= :profile_picture, last_edit_by= :last_edit_by, last_edit_at= :last_edit_at
+                    WHERE username=:usernameForUpdate");
+                    $stmt->bindParam(":full_name", $full_name, PDO::PARAM_STR);
+                    $stmt->bindParam(":education", $education, PDO::PARAM_STR);
+                    $stmt->bindParam(":pay_scale", $pay_scale, PDO::PARAM_STR);
+                    $stmt->bindParam(":profile_picture", $profile_picture, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_by", $last_edit_by, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_at", $last_edit_at, PDO::PARAM_STR);
+                    $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
+
+                if($query->execute() === TRUE AND $stmt->execute() === TRUE){
                     $_SESSION['notifStatus']= "User Updated";
                 redirect_to("../../public/settings");
                 }
@@ -111,16 +129,36 @@ $userObject= new UserController();
                     redirect_to("../../public/settings");
                 }
                 }else{
+                    //using default bcrypt hsahing technique
+                    $password_hash= password_hash($password, PASSWORD_DEFAULT);
                 
-                $password_hash= password_hash($password, PASSWORD_DEFAULT);
-                $query= $link->prepare("UPDATE `user_accounts` SET password_hash= :password_hash, full_name= :full_name, designation= :designation, contact_no= :contact_no WHERE id=:id");
-                $query->bindParam(":password_hash", $password_hash, PDO::PARAM_STR);
-                $query->bindParam(":full_name", $full_name, PDO::PARAM_STR);
-                $query->bindParam(":designation", $designation, PDO::PARAM_STR);
-                $query->bindParam(":contact_no", $contact, PDO::PARAM_STR);
-                $query->bindParam(":id", $id, PDO::PARAM_INT);
+                    $query= $link->prepare("UPDATE `user_accounts` SET password_hash= :password_hash,full_name= :full_name, contact_no= :contact_no,
+                    email= :email, access_level= :access_level, account_status= :account_status, remarks= :remarks WHERE username=:usernameForUpdate");
+                    $query->bindParam(":password_hash", $password_hash, PDO::PARAM_STR);
+                    $query->bindParam(":full_name", $full_name, PDO::PARAM_STR);
+                    $query->bindParam(":contact_no", $contact, PDO::PARAM_STR);
+                    $query->bindParam(":email", $email, PDO::PARAM_STR);
+                    $query->bindParam(":access_level", $access_level, PDO::PARAM_STR);
+                    $query->bindParam(":account_status", $account_status, PDO::PARAM_STR);
+                    $query->bindParam(":remarks", $remarks, PDO::PARAM_STR);
+                    $query->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
-                if($query->execute() === TRUE){
+                    //update the employees table
+                    $last_edit_by= $_SESSION['full_name'];
+                    $last_edit_at= date("F j, Y, g:i a");
+
+                    $stmt= $link->prepare("UPDATE `employees` SET full_name= :full_name, education= :education,
+                    pay_scale= :pay_scale, profile_picture= :profile_picture, last_edit_by= :last_edit_by, last_edit_at= :last_edit_at
+                    WHERE username=:usernameForUpdate");
+                    $stmt->bindParam(":full_name", $full_name, PDO::PARAM_STR);
+                    $stmt->bindParam(":education", $education, PDO::PARAM_STR);
+                    $stmt->bindParam(":pay_scale", $pay_scale, PDO::PARAM_STR);
+                    $stmt->bindParam(":profile_picture", $profile_picture, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_by", $last_edit_by, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_at", $last_edit_at, PDO::PARAM_STR);
+                    $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
+
+                if($query->execute() === TRUE AND $stmt->execute() === TRUE){
                     $_SESSION['notifStatus']= "User Updated";
                 redirect_to("../../public/settings");
                 }

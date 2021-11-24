@@ -32,13 +32,85 @@ while($row1= $stmt->fetch()){
     $education= $row1["education"];
     $department= $row1["department"];
     $payScale= $row1["pay_scale"];
-    $basicSalary= $row1["basic_salary"];
 }
 
+if($designation === 'Administrator'){
 
-echo "
+    echo "
  
  <form action='../core/view/dataParser?f=updateUser' method='POST'>
+
+ <div class='form-group to-left-50'>
+     <label>Username <span class='title-red'>*</span></label>
+     <input class='form-control' value='$username' name='username' disabled>
+    
+ </div>
+ <div class='form-group to-left-50'>
+     <label>Full Name <span class='title-red'>*</span></label>
+     <input class='form-control' value='$full_name' name='full_name'>
+    
+ </div>
+
+     <div class='form-group to-left-50'>
+ <label>Designation <span class='title-red'>*</span></label>
+     <select class='form-control' name='designation' disabled>
+         <option value='$designation'>$designation</option>
+     </select>
+    
+ </div>
+     
+ <div class='form-group to-left-50'>
+     <label>Contact # <span class='title-red'>*</span></label>
+     <input class='form-control' type='varchar' value='$contact_no' name='contact' required>
+    
+ </div>
+ <div class='form-group to-left-50'>
+ <label>Email <span class='title-red'>*</span></label>
+ <input class='form-control' type='varchar' value='$email' name='email' required>
+
+</div>
+<div class='form-group to-left-50'>
+ <label>Access Level <span class='title-red'>*</span></label>
+     <select class='form-control' name='access_level' disabled>
+         <option value='$access_level'>$access_level</option>
+     </select>
+    
+ </div>
+ <div class='form-group to-left-50'>
+ <label>Account Status <span class='title-red'>*</span></label>
+     <select class='form-control' name='account_status' disabled>
+         <option value='$account_status'>$account_status</option>
+     </select>
+    
+ </div>
+ <div class='form-group to-left-50'>
+     <label>Password</label>
+     <input class='form-control' type='password' minlength='8' maxlength='20' name='password'>
+ </div>
+ <div class='form-group to-left-50'>
+ <label>Remarks</label>
+ <input class='form-control' type='varchar' name='remarks' autocomplete='off'>
+
+</div>
+
+ <input type='hidden' value='$username' name='usernameForUpdate'>
+ 
+
+ <div class='modal-footer'>
+                                            
+ <button type='button' class='btn btn-default' id='close' data-dismiss='modal'>Close</button>
+<input type='submit' name='updateUser' class='btn btn-success button-right-50' value='Update'>
+</div>
+
+</form>
+
+ ";
+
+}else{
+
+    echo "
+ 
+ <form action='../core/view/dataParser?f=updateUser' method='POST' enctype='multipart/form-data'>
 
  <div class='form-group to-left-50'>
      <label>Username <span class='title-red'>*</span></label>
@@ -75,14 +147,22 @@ echo "
  <label>Pay Scale <span class='title-red'>*</span></label>
      <select class='form-control' name='pay_scale' required>
          <option value='$payScale'>$payScale</option>
-         <option value='Administrator'>Administrator</option>
-         <option value='Employee'>Employee</option>
+         <option> BPS 10 </option>
+         <option> BPS 09 </option>
+         <option> BPS 08 </option>
+         <option> BPS 07 </option>
+         <option> BPS 06 </option>
+         <option> BPS 05 </option>
+         <option> BPS 04 </option>
+         <option> BPS 03 </option>
+         <option> BPS 02 </option>
+         <option> BPS 01 </option>
      </select>
     
  </div>
 <div class='form-group to-left-50'>
-<label>Profile Picture <span class='title-red'>*</span></label>
-<input class='form-control' value='$profilePicture' name='profile_picture' type='file'>
+<label>Profile Picture</label>
+<input class='form-control' name='profile_picture' id='profile_picture' type='file'>
 
 </div>
      
@@ -92,8 +172,8 @@ echo "
     
  </div>
  <div class='form-group to-left-50'>
- <label>Email <span class='title-red'>*</span></label>
- <input class='form-control' type='varchar' value='$email' name='email' required>
+ <label>Email</label>
+ <input class='form-control' type='varchar' value='$email' name='email'>
 
 </div>
 <div class='form-group to-left-50'>
@@ -121,7 +201,7 @@ echo "
  </div>
  <div class='form-group to-left-50'>
  <label>Remarks</label>
- <input class='form-control' type='varchar' value='$remarks' name='remarks'>
+ <input class='form-control' type='varchar' name='remarks' autocomplete='off'>
 
 </div>
 
@@ -138,6 +218,10 @@ echo "
 </form>
 
  ";
+}
+
+
+
 }
 
 exit;

@@ -39,7 +39,7 @@
     Error # <?php echo $_GET['error']; ?>
   </h2>
 
-  <button><a href="http://localhost:8080/project/public/">Go Back</a></button>
+  <button><a href="http://localhost/project/public/">Go Back</a></button>
   
 </body>
 
