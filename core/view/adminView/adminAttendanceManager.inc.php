@@ -101,15 +101,15 @@ $employeeObject= new EmployeeController();
                     $arr= $userObject->getUserDetails($_SESSION['id']);
                     $employeeID= $arr['employeeID'];
                     if($userObject->getAttendanceStatus('', $employeeID) === TRUE){
-                        echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendance'>Mark Attendance</button>";
+                        echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendance'>Mark Attendance <i class='fa fa-plus fa-fw'></i></button>";
                     }else{
-                        echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendanceOut'>Mark Attendance</button>";
+                        echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendanceOut'>Mark Attendance <i class='fa fa-plus fa-fw'></i></button>";
                     }
                     ?>
-                    
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#">View Attendance Sheet</button>
+                    <button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#attendanceRecord'>Attendance Record <i class="fa fa-history fa-fw"></i></button>
+                    <button class="btn btn-primary button-left-50" id="printAttendanceTable" onclick='printData()'>Print <i class="fa fa-print fa-fw"></i></button>
                                     <!-- Advanced Tables -->
-                                    <div class="panel panel-default">
+                                    <div class="panel panel-default"  id="printTable">
                         <div class="panel-heading">
                              Attendance Sheet as of <?php echo date('F j, Y'); ?>
                         </div>
@@ -135,44 +135,6 @@ $employeeObject= new EmployeeController();
                         </div>
                     </div>
                     <!--End Advanced Tables -->
-
-<!-- Update User Record Modal Alert Start -->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> Update User Record</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        
-                                       
-                                        
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- Update User Record Modal Alrt End -->
-    
-<!-- View User Record Modal Alert Start -->
-<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
-                                <div class="modal-dialog" style="width:60%">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> View User Record</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        
-                                       
-                                        
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- View User Record Modal Alrt End -->
                        
                 </div>
                 <!--End Page Header -->
@@ -185,74 +147,7 @@ $employeeObject= new EmployeeController();
     <!-- end wrapper -->
 
     <?php require_once 'adminFooter.inc.php' ?>
-    
-    <script>
-   $(document).ready(function(){    
- $("body").on("click", ".userinfo", function(event){ 
 
-  
-  var userid = $(this).data('id');
-
-  // AJAX request
-  $.ajax({
-   url: '../core/view/ajaxUpdateUser',
-   type: 'post',
-   data: {userid: userid},
-   success: function(response){ 
-     // Add response in Modal body
-     $('.modal-body').html(response);
-
-     // Display Modal
-     $('#updateModal').modal('show');  
-     
-   }
-
-});
-$("body").on("click", "#close", function(event){ 
-
-$('#updateModal').modal('hide');
-location.reload();
-});
-});
-
-
-});    
-
-</script>
-
-<script>
-   $(document).ready(function(){    
- $("body").on("click", ".userdetail", function(event){ 
-
-  
-  var userid = $(this).data('id');
-
-  // AJAX request
-  $.ajax({
-   url: '../core/view/ajaxDetailUser',
-   type: 'post',
-   data: {userid: userid},
-   success: function(response){ 
-     // Add response in Modal body
-     $('.modal-body').html(response);
-
-     // Display Modal
-     $('#detailModal').modal('show');  
-     
-   }
-
-});
-$("body").on("click", "#close", function(event){ 
-
-$('#detailModal').modal('hide');
-location.reload();
-});
-});
-
-
-});    
-
-</script>
 
 </body>
 

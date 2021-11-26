@@ -362,6 +362,12 @@ table.dataTable thead .sorting:after {
     width: 20%;
 }
 
+.to-right-50{
+
+    float: right;
+    width: 20%;
+}
+
 .button-left-50{
     display: inline-block;
     margin-bottom: 1%;

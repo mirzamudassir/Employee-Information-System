@@ -96,9 +96,9 @@ $userObject= new UserController();
                 <div class="col-lg-12">
                     <h1 class="page-header">Settings</h1>
                     <?php $userObject->getNotification(); ?>
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#addUser">Add User</button>
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDepartments">Manage Departments</button>
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDesignations">Manage Designations</button>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#addUser">Add User <i class="fa fa-plus fa-fw"></i></button>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDepartments">Manage Departments <i class="fa fa-list fa-fw"></i></button>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDesignations">Manage Designations <i class="fa fa-list fa-fw"></i></button>
                                     <!-- Advanced Tables -->
                                     <div class="panel panel-default">
                         <div class="panel-heading">

@@ -383,6 +383,61 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
 
 
 
+                        <!-- Attendance Record Modal Alert Start -->
+<div class="modal fade" id="attendanceRecord" tabindex="-1" role="dialog" aria-labelledby="attendanceRecord" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Attendance Record</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <form action="" method="POST">
+                                        <div class="form-group to-left-50">
+                                            <label>Date <span class="title-red">*</span></label>
+                                            <input class="form-control" name="date" type="date" required>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-20">
+                                        <label>Status<span class="title-red"> *</span></label>
+                                            <select class="form-control" name="status" required>
+                                            <option value='Present'>Present</option>
+                                            <option value='Absent'>Absent</option>
+                                            </select>
+                                        </div>
+
+                                       <input type="submit" name="attendanceRecord" class="btn btn-success button-right-50 getAttendanceRecord" data-id="" value="Submit">
+                                        </form>
+
+                                        <div class="table-responsive" id="printAttendanceRecordTable">
+                                         <table class="table table-striped table-bordered table-hover" id="attendance-record">
+                                        <thead>
+                                        <th> Emp # </th>
+                                        <th> Name </th>
+                                        <th> Punch In </th>
+                                        <th> Punch Out </th>
+                                        </thead>
+                                        <tbody id="result">
+                                         
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" style="background-color: #428bca; color: white;" id="printAttendanceRecordTable" onclick='printAttendanceRecordTable()'>Print <i class="fa fa-print fa-fw"></i></button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Attendance Record Modal Alrt End -->
+
+
+
+
 
                         <?php require_once 'adminFooter.inc.php' ?>
 
@@ -441,6 +496,35 @@ $("#txt_password").keyup(function(){
 });
 
 });
+
+
+
+$(document).ready(function(){
+
+$("#attendanceRecord").submit(function(event){
+    event.preventDefault();
+     $.ajax({
+        url: '../core/view/ajaxAttendanceRecord',
+        type: 'post',
+        data: $('form').serialize(),
+        success: function(response){
+
+            // Add response in Modal body
+            $('#result').html(response);
+
+            // Display Modal
+            //$('#attendanceRecord').modal('show');  
+
+        }
+     });
+
+});
+
+});
+                        
                         </script>
+
+
+
 </body>
 </html>

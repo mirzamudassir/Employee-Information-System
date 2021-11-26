@@ -104,6 +104,12 @@ $userObject= new UserController();
                         </div>
                         
                        Dashboard
+                        <form method="POST" action="">
+                       <input type="date" name="time">
+                       <input type="submit" value="submit">
+                       </form>
+
+                       <?php echo $_POST['time'] ?>
                     </div>
                     <!--End Advanced Tables -->
 

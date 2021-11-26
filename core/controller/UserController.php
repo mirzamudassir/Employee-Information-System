@@ -288,6 +288,7 @@ public function updateDesignationEMPCount(){
 
 public function getAttendanceStatus($query, $employeeID){
   global $link;
+  $punch_in_timestamp= '';
 
   $stmt= $link->prepare("SELECT * FROM `attendance_sheet` WHERE employeeID= :employeeID");
   $stmt->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
@@ -378,6 +379,123 @@ public function getTodayAttendanceSheet(){
         </td>
     </tr>";
         }
+
+}
+
+
+//it will convert the date format from 00-00-0000 to January 01, 2021
+public function convertDateToEISFormat($date){
+  $months= array("01"=>"January", "02"=>"February", "03"=>"March", "04"=>"April", "05"=>"May", "06"=>"June",
+                "07"=>"July", "08"=>"August", "09"=>"September", "10"=>"October", "11"=>"November", "12"=>"December");
+  
+  $monthInDecimal= explode("-", $date);
+  $monthInDecimal= $monthInDecimal[1];
+
+  $monthInString= $months["$monthInDecimal"];
+
+  $dayInDecimal= explode("-", $date);
+  $dayInDecimal= $dayInDecimal[2];
+
+  $yearInDecimal= explode("-", $date);
+  $yearInDecimal= $yearInDecimal[0];
+
+  $convertedDate= $monthInString . " " . $dayInDecimal . ", " . $yearInDecimal;
+
+  //January, 01, 2021
+  return $convertedDate;
+
+}
+
+
+//it will convert the time format from 16:00 to 04:00 PM
+public function convertTimeToEISFormat($time){
+  
+  
+  $hours= explode(":", $time);
+  $hours= $hours[0];
+  $minutes= explode(":", $time);
+  $minutes= $minutes[1];
+  
+  if($hours > 11){
+      $hoursFormats= array(13=>"01", 14=>"02", 15=>"03", 16=>"04", 17=>"05", 18=>"06", 19=>"07", 20=>"08", 
+                          21=>"09", 22=>"10", 23=>"11", 00=>"12", 12=>"12");
+      
+      $convertedHours= $hoursFormats[$hours];
+      $convertedTime= $convertedHours . ":" . $minutes . " pm";
+      
+  }else{
+      if($hours== 00)
+        $hours= 12;
+        
+      $convertedTime= $hours . ":" . $minutes . " am";
+  }
+  
+  return $convertedTime;
+
+}
+
+
+//return the custome attendance sheet with defined dates and time
+public function getCustomeAttendanceSheet($id, $date, $status){
+  if(isAdminValid($id)){
+  global $link;
+
+  $dateWithOutTime= $this->convertDateToEISFormat($date);
+
+  if($status === 'Present'){
+
+  $stmt= $link->prepare("SELECT * FROM attendance_sheet AS presentEmp WHERE punch_in_timestamp LIKE '%$dateWithOutTime%' ORDER BY id DESC");
+
+ 
+  $stmt->execute();
+
+  while($row= $stmt->fetch()){
+    $employeeID= $row['employeeID'];
+    $punch_in_timestamp= $row['punch_in_timestamp'];
+    $punch_out_timestamp= $row['punch_out_timestamp'];
+
+
+    $stmt2= $link->prepare("SELECT full_name FROM `employees` WHERE employeeID= :employeeID");
+    $stmt2->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+    $stmt2->execute();
+    while($row2= $stmt2->fetch()){
+      $full_name= $row2['full_name'];
+    }
+
+    echo "<tr>
+    <td>$employeeID</td>
+    <td>$full_name</td>
+    <td>$punch_in_timestamp</td>
+    <td>$punch_out_timestamp</td>
+    </td>
+    </tr>";
+  }
+  }elseif($status === 'Absent'){
+    $stmt= $link->prepare("SELECT emp.employeeID, emp.full_name FROM employees emp LEFT JOIN attendance_sheet attend ON emp.employeeID <> attend.employeeID 
+                           WHERE attend.punch_in_timestamp LIKE '%$dateWithOutTime%'");
+
+ 
+  $stmt->execute();
+
+  while($row= $stmt->fetch()){
+    $employeeID= $row['employeeID'];
+    $full_name= $row['full_name'];
+
+    echo "<tr>
+    <td>$employeeID</td>
+    <td>$full_name</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    </td>
+    </tr>";
+  }
+  }
+  
+}else{
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
+            exit();
+            return false;
+}
 
 }
 

@@ -39,3 +39,26 @@
             $('#dataTablesss-state-example').dataTable();
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            $('#attendance-record').dataTable();
+        });
+    </script>
+
+    <script type='text/javascript'>
+         function printData() {
+            var divToPrint=document.getElementById("printTable");
+        var printWindow = window.open('', '', 'height=400,width=600');
+        printWindow.document.write(divToPrint.outerHTML);
+        printWindow.print();
+    }
+    </script>
+
+<script type='text/javascript'>
+         function printAttendanceRecordTable() {
+            var divToPrint=document.getElementById("printAttendanceRecordTable");
+        var printWindow = window.open('', '', 'height=400,width=600');
+        printWindow.document.write(divToPrint.outerHTML);
+        printWindow.print();
+    }
+    </script>
