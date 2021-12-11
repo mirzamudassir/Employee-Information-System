@@ -43,14 +43,67 @@
         $(document).ready(function () {
             $('#attendance-record').dataTable();
         });
+
+        $(document).ready(function () {
+            $('#leave-settings').dataTable();
+        });
+        $(document).ready(function () {
+            $('#allowances').dataTable();
+        });
+        $(document).ready(function () {
+            $('#deductions').dataTable();
+        });
     </script>
 
     <script type='text/javascript'>
          function printData() {
             var divToPrint=document.getElementById("printTable");
-        var printWindow = window.open('', '', 'height=400,width=600');
+        /* var printWindow = window.open('', '', 'height=400,width=600');
         printWindow.document.write(divToPrint.outerHTML);
-        printWindow.print();
+        printWindow.print(); */
+
+                var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = dd + '-' + mm + '-' + yyyy;
+
+        var mywindow = window.open('', 'PRINT', 'height=600,width=800');
+
+
+        mywindow.document.write('<html><head><base href="/" /><title>' + document.title + '</title>');
+        mywindow.document.write('<style type="text/css" media="print" />table { width: 100%; }</style>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write('<h3> Attendance Sheet as of ' + today + '</h3>');
+        mywindow.document.write(divToPrint.outerHTML);
+        mywindow.document.write('</body></html>');
+
+    }
+
+    function printLeaveRequests() {
+            var divToPrint=document.getElementById("printTable");
+        /* var printWindow = window.open('', '', 'height=400,width=600');
+        printWindow.document.write(divToPrint.outerHTML);
+        printWindow.print(); */
+
+                var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = dd + '-' + mm + '-' + yyyy;
+
+        var mywindow = window.open('', 'PRINT', 'height=600,width=800');
+
+
+        mywindow.document.write('<html><head><base href="/" /><title>' + document.title + '</title>');
+        mywindow.document.write('<style type="text/css" media="print" />table { width: 100%; }</style>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write('<h3> Leave Requests </h3>');
+        mywindow.document.write(divToPrint.outerHTML);
+        mywindow.document.write('</body></html>');
+
     }
     </script>
 
@@ -59,6 +112,7 @@
             var divToPrint=document.getElementById("printAttendanceRecordTable");
         var printWindow = window.open('', '', 'height=400,width=600');
         printWindow.document.write(divToPrint.outerHTML);
-        printWindow.print();
+        printWindow.print(); 
+
     }
     </script>

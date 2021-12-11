@@ -109,7 +109,7 @@ $userObject= new UserController();
                        <input type="submit" value="submit">
                        </form>
 
-                       <?php echo $_POST['time'] ?>
+                       <?php  if(isset($_POST['time'])){ echo $_POST['time'];} ?>
                     </div>
                     <!--End Advanced Tables -->
 

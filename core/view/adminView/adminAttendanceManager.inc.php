@@ -100,7 +100,7 @@ $employeeObject= new EmployeeController();
                     //check for which modal content to show for attendance
                     $arr= $userObject->getUserDetails($_SESSION['id']);
                     $employeeID= $arr['employeeID'];
-                    if($userObject->getAttendanceStatus('', $employeeID) === TRUE){
+                    if($userObject->getAttendanceStatus('', $employeeID, date("F j, Y")) === TRUE){
                         echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendance'>Mark Attendance <i class='fa fa-plus fa-fw'></i></button>";
                     }else{
                         echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendanceOut'>Mark Attendance <i class='fa fa-plus fa-fw'></i></button>";
@@ -109,13 +109,13 @@ $employeeObject= new EmployeeController();
                     <button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#attendanceRecord'>Attendance Record <i class="fa fa-history fa-fw"></i></button>
                     <button class="btn btn-primary button-left-50" id="printAttendanceTable" onclick='printData()'>Print <i class="fa fa-print fa-fw"></i></button>
                                     <!-- Advanced Tables -->
-                                    <div class="panel panel-default"  id="printTable">
+                                    <div class="panel panel-default">
                         <div class="panel-heading">
                              Attendance Sheet as of <?php echo date('F j, Y'); ?>
                         </div>
                         
                         <div class="panel-body">
-                            <div class="table-responsive">
+                            <div class="table-responsive" id="printTable">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>

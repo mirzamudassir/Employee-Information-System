@@ -19,5 +19,5 @@ php_value error_log ./errors.log
 # php_flag display_errors on 
 </IfModule>
 
-ErrorDocument 404 http://localhost:8080/project/public/404
+ErrorDocument 404 http://localhost/project/public/404
 

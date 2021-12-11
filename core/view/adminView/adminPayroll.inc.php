@@ -96,35 +96,31 @@ $userObject= new UserController();
                 <div class="col-lg-12">
                     <h1 class="page-header">Pay Roll</h1>
                     <?php $userObject->getNotification(); ?>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#bulkPayments">Bulk Payments <i class="fa fa-list fa-dollar-sign"></i></button>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageAllowances">Manage Allowances <i class="fa fa-list fa-hand-holding-usd"></i></button>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDeductions">Manage Deductions <i class="fa fa-list fa-percentage"></i></button>
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#paymentSettings">Payment Settings <i class="fa fa-cogs fa-fw"></i></button>
                     
-                                    <!-- Advanced Tables -->
-                                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                             Items
-                        </div>
-                        
-                       PayRoll
-                    </div>
-                    <!--End Advanced Tables -->
 
-<!-- Update Item Record Modal Alert Start -->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> Update User Record</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        
-                                       
-                                        
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- Update Item Record Modal Alrt End -->
+
+                   <table class="payroll-table">
+                    <tr class="payroll-table-tr">
+                        <td class="payroll-table-td">
+                        <form action="" method="POST" id="search">
+                        <input type="varchar" name="employeeID" id="employeeID" placeholder="Employee ID" class="form-control to-left-50" autocomplete="off" required>
+                        <input type="submit" name="search" class="btn btn-success button-right-50" data-id="" value="Search">
+                        </form>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="payroll-table-td">
+                            <div id="employeeDetails">Enter the Employee ID to make Payment.</div>
+                        </td>
+                    </tr>
+
+                   </table>
+
                        
                 </div>
                 <!--End Page Header -->
@@ -137,6 +133,34 @@ $userObject= new UserController();
     <!-- end wrapper -->
 
     <?php require_once 'adminFooter.inc.php' ?>
+
+<script>
+    $(document).ready(function(){
+
+$("#search").submit(function(event){
+
+    event.preventDefault();
+     $.ajax({
+        url: '../core/view/ajaxFetchEmployeePayroll',
+        type: 'post',
+        data: $('form').serialize(),
+        success: function(response){
+
+            // Add response in Modal body
+            $('#employeeDetails').html(response); 
+
+        }
+     });
+
+});
+
+});
+
+window.onload= function(){
+    document.getElementById("employeeID").value= "EIS-";
+}
+                        
+                        </script>
     
 </body>
 

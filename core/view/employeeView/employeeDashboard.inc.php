@@ -29,15 +29,7 @@ require_once 'employeeHeader.inc.php';
                         <i class="fa fa-user fa-3x"></i>
                     </a>
                    <!-- dropdown user--> 
-                   <ul class="dropdown-menu dropdown-user">
-                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#userProfile"><i class="fa fa-user fa-fw"></i>Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="javascript:void(0)" onclick="location.href='../core/modal/Auth/logout'"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
-                        </li>
-                    </ul>
+                   <?php echo $dropDownMenu; ?>
                     <!-- end dropdown-user -->
                 </li>
                 <!-- end main dropdown -->

@@ -183,6 +183,95 @@ switch($func){
 
             break;
 
+         case 'postLeaveSettings':
+
+            $designation= trim($_POST['designation']);
+            $allowed_leaves= trim($_POST['allowed_leaves']);
+            $paid_leave_charges= trim($_POST['paid_leave_charges']);
+            $paid_leave_charges= $paid_leave_charges . ".00";
+    
+            postLeaveSettings($designation, $allowed_leaves, $paid_leave_charges);
+            break;
+
+        case 'deleteLeaveSetting':
+
+            $designation= trim($_POST['designation']);
+    
+            deleteLeaveSetting($designation);
+            break;
+
+
+            case 'postLeaveRequest':
+
+                $employeeID= trim($_POST['employeeID']);
+                $leave_type= trim($_POST['leave_type']);
+                $no_of_leaves= trim($_POST['no_of_leaves']);
+                $leaves_from= trim($_POST['leaves_from']);
+                $leaves_to= trim($_POST['leaves_to']);
+                $report_back_date= trim($_POST['report_back_date']);
+                $reason= trim($_POST['reason']);
+        
+                postLeaveRequest($employeeID, $no_of_leaves, $leaves_from, $leaves_to, $leave_type, $report_back_date, $reason);
+                break;
+
+            
+            case 'updateLeaveRequest':
+
+                if(isset($_POST['rejectLeave'])){
+                    $requestID= trim($_POST['requestID']);
+                    $remarks= trim($_POST['remarks']);
+
+                    rejectLeaveRequest($requestID, $remarks);
+
+                }elseif(isset($_POST['approveLeave'])){
+                    $requestID= trim($_POST['requestID']);
+                    $remarks= trim($_POST['remarks']);
+
+                    approveLeaveRequest($requestID, $remarks);
+                }
+
+                break;
+
+
+            case 'postAllowances':
+
+                $allowance_code= trim($_POST['allowance_code']);
+                $allowance_name= trim($_POST['allowance_name']);
+                $allowance_amount= trim($_POST['allowance_amount']);
+                $pay_scale= trim($_POST['pay_scale']);
+        
+                postAllowances($allowance_code, $pay_scale, $allowance_name, $allowance_amount);
+                break;
+            
+
+            case 'deleteAllowances':
+
+                $allowance_ID= trim($_POST['id']);
+        
+                deleteAllowances($allowance_ID);
+                break;
+
+
+            case 'postDeductions':
+
+                $deduction_code= trim($_POST['deduction_code']);
+                $deduction_name= trim($_POST['deduction_name']);
+                $deduction_type= trim($_POST['deduction_type']);
+                $deduction_amount= trim($_POST['deduction_amount']);
+                $pay_scale= trim($_POST['pay_scale']);
+        
+                postDeductions($deduction_code, $deduction_name, $deduction_type, $deduction_amount, $pay_scale);
+                break;
+            
+
+            case 'deleteDeductions':
+
+                $deduction_ID= trim($_POST['id']);
+        
+                deleteDeductions($deduction_ID);
+                break;
+
+
     default:
 
     echo "ERROR: ERR_DATAPARSER";

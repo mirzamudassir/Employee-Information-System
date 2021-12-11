@@ -114,7 +114,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
 
                                         <div class="form-group to-left-50">
                                             <label>Contact # <span class="title-red">*</span></label>
-                                            <input class="form-control" name="contact" type="text" minlength="11" maxlength="15" required>
+                                            <input class="form-control" name="contact" type="tel" placeholder="0300-1234567" pattern="[0-9]{4}-[0-9]{7}" required>
                                             
                                         </div>
 
@@ -251,7 +251,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
 
                                         <div class="form-group to-left-20">
                                             <label>Basic Salary <span class="title-red">*</span></label>
-                                            <input class="form-control" name="basic_salary" type="number" maxlength="20" placeholder="Format: 100000" required>
+                                            <input class="form-control" name="basic_salary" type="number" min="1" maxlength="20" placeholder="Format: 100000" required>
                                            
                                         </div>
 
@@ -335,7 +335,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                                         </div>
                                         <div class="modal-body">
                                         <?php
-                                            $attendanceStatus= $userControllerObject->getAttendanceStatus('', $userDetails['employeeID']);
+                                            $attendanceStatus= $userControllerObject->getAttendanceStatus('', $userDetails['employeeID'], date("F j, Y"));
                                             if($attendanceStatus === 'DENIED'){ ?>
                                                 <label class='title-red'> You have already Punched Out.</label>
 
@@ -355,7 +355,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
 
                                         <div class="form-group to-left-70">
                                             <label>Punch In Timestamp <span class="title-red">*</span></label>
-                                            <input class="form-control" name="last_timestamp" value='<?php echo $userControllerObject->getAttendanceStatus('details', $userDetails['employeeID']) ?>' type="varchar" disabled>
+                                            <input class="form-control" name="last_timestamp" value='<?php echo $userControllerObject->getAttendanceStatus('details', $userDetails['employeeID'], date("F j, Y")) ?>' type="varchar" disabled>
                                         </div>
                             
                                         <div class="form-group to-left-70">
@@ -395,7 +395,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                                         <form action="" method="POST">
                                         <div class="form-group to-left-50">
                                             <label>Date <span class="title-red">*</span></label>
-                                            <input class="form-control" name="date" type="date" required>
+                                            <input class="form-control" name="date" type="date" max="<?php echo date("Y-m-d", strtotime(date("Y-m-d") . "-1 day")); ?>" required>
                                            
                                         </div>
 
@@ -434,6 +434,258 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                                 </div>
                             </div>
                         <!-- Attendance Record Modal Alrt End -->
+
+
+
+                        <!-- Leave Settings Modal Alert Start -->
+<div class="modal fade" id="leaveSettings" tabindex="-1" role="dialog" aria-labelledby="leaveSettings" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Leave Settings</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <form action="../core/view/dataParser?f=postLeaveSettings" method="POST">
+                                        <div class="form-group to-left-50">
+                                        <label>Designation <span class="title-red"> *</span></label>
+                                            <select class="form-control" name="designation" required>
+                                            <option value="NULL"> -- Select -- </option>
+                                            <?php $userControllerObject->getDesignationValues($_SESSION['id']); ?>
+                                            </select>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                            <label>Allowed Leaves  <span class="title-red">*</span></label>
+                                            <input class="form-control" name="allowed_leaves" placeholder="Per Month" type="number" min="0" maxlength="30" required>
+                                           
+                                        </div>
+                                        <div class="form-group to-left-50">
+                                            <label>Paid Leave Charges <i class="fa fa-dollar-sign fa-fw"></i><span class="title-red">*</span></label>
+                                            <input class="form-control" name="paid_leave_charges" placeholder="Per Leave" type="number" min="0" maxlength="30" required>
+                                           
+                                        </div>
+                                        
+                                        
+                                       <input style="float:right; margin-bottom:2%; margin-right:9%;" type="submit" name="save_settings" class="btn btn-success button-right-50" value="Save">
+                                       
+                                        </form>
+
+                                        <div class="table-responsive">
+                                         <table class="table table-striped table-bordered table-hover" id="leave-settings">
+                                        <thead>
+                                        <th> Designation </th>
+                                        <th> BPS </th>
+                                        <th> Allowed Leaves </th>
+                                        <th> Paid Leave </th>
+                                        <th> Action </th>
+                                        </thead>
+                                        <tbody>
+                                        <?php $userControllerObject->getLeavesSettings($_SESSION['id']); ?>
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Leave Settings Modal Alrt End -->
+
+
+
+                        <!-- Manage Allowances Modal Alert Start -->
+<div class="modal fade" id="manageAllowances" tabindex="-1" role="dialog" aria-labelledby="manageAllowances" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Manage Allowances</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <form action="../core/view/dataParser?f=postAllowances" method="POST">
+                                        <div class="form-group to-left-50">
+                                            <label>Allowance Code <span class="title-red">*</span></label>
+                                            <input class="form-control" name="allowance_code" type="varchar" maxlength="30" required>
+                                           
+                                        </div>
+                                        <div class="form-group to-left-50">
+                                            <label>Allowance Name <span class="title-red">*</span></label>
+                                            <input class="form-control" name="allowance_name" type="varchar" maxlength="30" required>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                            <label>Allowance Amount <span class="title-red">* (%)</span></label>
+                                            <input class="form-control" name="allowance_amount" type="number" min="1" maxlength="20" placeholder="Format: 10" required>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                        <label>Pay Scale<span class="title-red"> *</span></label>
+                                            <select class="form-control" name="pay_scale" required>
+                                            <option> --- SELECT --- </option>
+                                            <option value="BPS 10"> BPS 10 </option>
+                                            <option value="BPS 09"> BPS 09 </option>
+                                            <option value="BPS 08"> BPS 08 </option>
+                                            <option value="BPS 07"> BPS 07 </option>
+                                            <option value="BPS 06"> BPS 06 </option>
+                                            <option value="BPS 05"> BPS 05 </option>
+                                            <option value="BPS 04"> BPS 04 </option>
+                                            <option value="BPS 03"> BPS 03 </option>
+                                            <option value="BPS 02"> BPS 02 </option>
+                                            <option value="BPS 01"> BPS 01 </option>
+                                            </select>
+                                        </div>
+
+                                       <input style="float:right; margin-top:5% ;margin-bottom:2%; margin-right:9%;" type="submit" name="add" class="btn btn-success button-right-50" value="Add">
+                                        </form>
+
+                                        <div class="table-responsive">
+                                         <table class="table table-striped table-bordered table-hover" id="allowances">
+                                        <thead>
+                                        <th> Code </th>
+                                        <th> Name</th>
+                                        <th>Value</th>
+                                        <th>BPS</th>
+                                        <th> By </th>
+                                        <th> Action </th>
+                                        </thead>
+                                        <tbody>
+                                        <?php $userControllerObject->getAllowances("getListForTable", "", $_SESSION['id']); ?>
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Manage Allowances Modal Alrt End -->
+
+
+                        <!-- Manage Deductions Modal Alert Start -->
+<div class="modal fade" id="manageDeductions" tabindex="-1" role="dialog" aria-labelledby="manageDeductions" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Manage Deductions</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <form action="../core/view/dataParser?f=postDeductions" method="POST">
+                                        <div class="form-group to-left-50">
+                                            <label>Deduction Code <span class="title-red">*</span></label>
+                                            <input class="form-control" name="deduction_code" type="varchar" maxlength="30" required>
+                                           
+                                        </div>
+                                        <div class="form-group to-left-50">
+                                            <label>Deduction Name <span class="title-red">*</span></label>
+                                            <input class="form-control" name="deduction_name" type="varchar" maxlength="30" required>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                        <label>Deduction Type<span class="title-red"> *</span></label>
+                                            <select class="form-control" name="deduction_type" required>
+                                            <option> --- SELECT --- </option>
+                                            <option value="Income Tax"> Income Tax </option>
+                                            <option value="Insurance"> Insurance </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                            <label>Deduction Amount <span class="title-red">* (%)</span></label>
+                                            <input class="form-control" name="deduction_amount" type="number" min="1" maxlength="20" placeholder="Format: 10" required>
+                                           
+                                        </div>
+
+                                        <div class="form-group to-left-50">
+                                        <label>Pay Scale<span class="title-red"> *</span></label>
+                                            <select class="form-control" name="pay_scale" required>
+                                            <option> --- SELECT --- </option>
+                                            <option value="BPS 10"> BPS 10 </option>
+                                            <option value="BPS 09"> BPS 09 </option>
+                                            <option value="BPS 08"> BPS 08 </option>
+                                            <option value="BPS 07"> BPS 07 </option>
+                                            <option value="BPS 06"> BPS 06 </option>
+                                            <option value="BPS 05"> BPS 05 </option>
+                                            <option value="BPS 04"> BPS 04 </option>
+                                            <option value="BPS 03"> BPS 03 </option>
+                                            <option value="BPS 02"> BPS 02 </option>
+                                            <option value="BPS 01"> BPS 01 </option>
+                                            </select>
+                                        </div>
+
+                                       <input style="float:right; margin-top:5% ;margin-bottom:2%; margin-right:9%;" type="submit" name="add" class="btn btn-success button-right-50" value="Add">
+                                        </form>
+
+                                        <div class="table-responsive">
+                                         <table class="table table-striped table-bordered table-hover" id="deductions">
+                                        <thead>
+                                        <th> Code </th>
+                                        <th> Name</th>
+                                        <th> Type</th>
+                                        <th>Value</th>
+                                        <th>BPS</th>
+                                        <th> Action </th>
+                                        </thead>
+                                        <tbody>
+                                        <?php $userControllerObject->getDeductions("getListForTable", "", $_SESSION['id']); ?>
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Manage Deductions Modal Alrt End -->
+
+
+                         <!-- Payment Settings Modal Alert Start -->
+<div class="modal fade" id="paymentSettings" tabindex="-1" role="dialog" aria-labelledby="paymentSettings" aria-hidden="true">
+<div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Payment Settings</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <form action="" method="POST">
+                            
+                                        <div class="form-group to-left-50">
+                                            <label>Emp # <span class="title-red">*</span></label>
+                                            <input class="form-control" name="employeeIDForPaymentSettings" value="EIS-" type="varchar" maxlength="30" autocomplete="off" required>
+                                           
+                                        </div>
+
+                                       <input type="submit" name="paymentSettings" class="btn btn-success button-right-50 getPaymentSettings" data-id="" value="Search">
+                                        </form>
+
+                                        <div class="table-responsive" id="paymentSettingsResult">
+                                         
+                                        </div>
+                                        
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- Payment Settings Modal Alrt End -->
 
 
 
@@ -512,8 +764,26 @@ $("#attendanceRecord").submit(function(event){
             // Add response in Modal body
             $('#result').html(response);
 
-            // Display Modal
-            //$('#attendanceRecord').modal('show');  
+        }
+     });
+
+});
+
+});
+
+
+$(document).ready(function(){
+
+$("#paymentSettings").submit(function(event){
+    event.preventDefault();
+     $.ajax({
+        url: '../core/view/ajaxFetchDataForPaymentSettings',
+        type: 'post',
+        data: $('form').serialize(),
+        success: function(response){
+
+            // Add response in Modal body
+            $('#paymentSettingsResult').html(response);
 
         }
      });
@@ -521,6 +791,7 @@ $("#attendanceRecord").submit(function(event){
 });
 
 });
+
                         
                         </script>
 

@@ -338,6 +338,12 @@ table.dataTable thead .sorting:after {
     margin: 15px 0;
 }
 
+.to-left-90{
+
+    display: inline-block;
+    width: 91.5%;
+}
+
 .to-left-70{
 
     display: inline-block;
@@ -365,7 +371,7 @@ table.dataTable thead .sorting:after {
 .to-right-50{
 
     float: right;
-    width: 20%;
+    width: 30%;
 }
 
 .button-left-50{
@@ -396,3 +402,27 @@ table.dataTable thead .sorting:after {
     margin-left: 30%;
     width: 30%;
 }
+
+.payroll-table{
+    width: 100%; 
+    margin-top: 3%;
+    padding-bottom: 3%;
+}
+
+.payroll-table-tr{
+
+    text-align: center;
+}
+
+.payroll-table-td{
+    padding-top: 3%;
+    padding-bottom: 3%;
+
+}
+
+.command{
+    background-color: rgb(182, 182, 182);
+    font-style: italic;
+    border-radius: 3px;
+}
+

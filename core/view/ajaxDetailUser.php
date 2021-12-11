@@ -31,7 +31,7 @@ if(isset($_POST['userid'])){
 
 echo "
 
-<table style='width:75%; font-size: 1em; display:inline-block;'>
+<table style='width:75%; font-size: 1em; display:inline-block; border-collapse:collapse'>
 <tr style='line-height: 2em;'>
 <td><b>Emp #</b> $employeeID &nbsp;</td>
 <td><b>Name:</b> $full_name</td>
@@ -48,7 +48,7 @@ echo "
 </tr>
 
 <tr style='line-height: 2em;'>
-<td><b>Allowances:</b> $allowances &nbsp;</td>
+<td colspan='2'><b>Allowances:</b> $allowances &nbsp;</td>
 </tr>
 
 <tr style='line-height: 2em;'>
@@ -72,13 +72,13 @@ echo "
 </tr>
 
 <tr style='line-height: 2em;'>
-<td><b>Remarks:</b> $remarks &nbsp;</td>
+<td colspan='2'><b>Remarks:</b> $remarks &nbsp;</td>
 </tr>
 </table>
 
 <table style='display:flex; float:right'>
 <tr>
-<td><img src='$profile_picture' alt='profile_picture' width='200px' height='200px'></td>
+<td><img id='profilePicture' src='$profile_picture' alt='profile_picture' width='200px' height='200px'></td>
 </tr>
 </table>
 

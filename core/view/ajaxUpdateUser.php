@@ -34,7 +34,7 @@ while($row1= $stmt->fetch()){
     $payScale= $row1["pay_scale"];
 }
 
-if($designation === 'Administrator'){
+if($access_level === 'ADMIN'){
 
     echo "
  
@@ -42,7 +42,7 @@ if($designation === 'Administrator'){
 
  <div class='form-group to-left-50'>
      <label>Username <span class='title-red'>*</span></label>
-     <input class='form-control' value='$username' name='username' disabled>
+     <input class='form-control' value='$username' disabled>
     
  </div>
  <div class='form-group to-left-50'>
@@ -53,7 +53,7 @@ if($designation === 'Administrator'){
 
      <div class='form-group to-left-50'>
  <label>Designation <span class='title-red'>*</span></label>
-     <select class='form-control' name='designation' disabled>
+     <select class='form-control' disabled>
          <option value='$designation'>$designation</option>
      </select>
     
@@ -71,14 +71,14 @@ if($designation === 'Administrator'){
 </div>
 <div class='form-group to-left-50'>
  <label>Access Level <span class='title-red'>*</span></label>
-     <select class='form-control' name='access_level' disabled>
+     <select class='form-control' disabled>
          <option value='$access_level'>$access_level</option>
      </select>
     
  </div>
  <div class='form-group to-left-50'>
  <label>Account Status <span class='title-red'>*</span></label>
-     <select class='form-control' name='account_status' disabled>
+     <select class='form-control' disabled>
          <option value='$account_status'>$account_status</option>
      </select>
     
@@ -168,7 +168,7 @@ if($designation === 'Administrator'){
      
  <div class='form-group to-left-50'>
      <label>Contact # <span class='title-red'>*</span></label>
-     <input class='form-control' type='varchar' value='$contact_no' name='contact' required>
+     <input class='form-control' type='tel' placeholder='0300-1234567' pattern='[0-9]{4}-[0-9]{7}' value='$contact_no' name='contact' required>
     
  </div>
  <div class='form-group to-left-50'>

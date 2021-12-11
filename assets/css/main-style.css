@@ -145,3 +145,17 @@ border-color: #27A6BE;
     
 }
 }
+
+@media(min-width:480px){
+    #profilePicture{
+        width: 130px;
+        height: 150px;
+    }
+}
+
+@media(min-width: 1080px){
+    #profilePicture{
+        width: 200px;
+        height: 200px;
+    }
+}

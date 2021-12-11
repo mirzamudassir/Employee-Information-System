@@ -2,13 +2,19 @@
 //menu code
 $mainMenu= "
 <li class='active'>
-<a href='dashboard'><i class='fa fa-gear fa-fw'></i>Dashboard</a>
+<a href='dashboard'><i class='fa fa-home fa-fw'></i> Dashboard</a>
 </li>
 <li>
-<a href='attendanceManager'><i class='fa fa-stamp fa-fw'></i>Attendance Manager</a>
+<a href='attendanceManager'><i class='fa fa-stamp fa-fw'></i> Attendance Manager</a>
 </li>
 <li>
-<a href='settings'><i class='fa fa-gear fa-fw'></i>User Management</a>
+<a href='leaveManager'><i class='fa fa-plane fa-fw'></i> Leave Manager</a>
+</li>
+<li>
+<a href='paySlips'><i class='fa fa-money-check fa-fw'></i> Pay Slips</a>
+</li>
+<li>
+<a href='settings'><i class='fa fa-gear fa-fw'></i> Settings</a>
 </li>
 
 ";

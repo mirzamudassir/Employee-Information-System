@@ -245,6 +245,39 @@ $employeeID =  preg_replace_callback( "|(\d+)|", "increment", $lastEmployeeID);
 }
 
 
+//this function generates the Leave Rewquest ID / Ticket ID for new User
+public function generateLeaveRequestID(){
+  global $link;
+
+  $stmt= $link->prepare("SELECT request_id FROM `leaves_requests` ORDER BY request_id DESC LIMIT 1");
+  $stmt->execute();
+
+  if($stmt->rowCount() == 0){
+    $leaveRequestID= "LR001";
+    return $leaveRequestID;
+  }else{
+    $row= $stmt->fetch();
+    $lastleaveRequestID= $row['request_id'];
+
+    //increments the numeric part of Employee ID by 1
+    
+function increment($matches)
+{
+    if(isset($matches[1]))
+    {
+        $length = strlen($matches[1]);
+        return sprintf("%0".$length."d", ++$matches[1]);
+    }    
+}
+
+$leaveRequestID =  preg_replace_callback( "|(\d+)|", "increment", $lastleaveRequestID);
+    return $leaveRequestID;
+
+
+  }
+}
+
+
 
 //this function will get the employee pay scale and salary according to designation
 public function getEmployeeScaleAndSalary($designation){
@@ -286,11 +319,11 @@ public function updateDesignationEMPCount(){
   return $array;
 }
 
-public function getAttendanceStatus($query, $employeeID){
+public function getAttendanceStatus($query, $employeeID, $dateInEISFormat){
   global $link;
   $punch_in_timestamp= '';
 
-  $stmt= $link->prepare("SELECT * FROM `attendance_sheet` WHERE employeeID= :employeeID");
+  $stmt= $link->prepare("SELECT * FROM `attendance_sheet` WHERE employeeID= :employeeID AND punch_in_timestamp LIKE '%$dateInEISFormat%'");
   $stmt->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
   $stmt->execute();
   
@@ -407,6 +440,30 @@ public function convertDateToEISFormat($date){
 }
 
 
+//it will convert the date format from January 01, 2021 to yyyy-mm-dd
+public function convertDateToDefaultFormat($date){
+  $months= array("January"=>"01", "February"=>"02", "March"=>"03", "April"=>"04", "May"=>"05", "June"=>"06",
+                "July"=>"07", "August"=>"08", "September"=>"09", "October"=>"10", "November"=>"11", "December"=>"12");
+  
+  $monthInString= explode(" ", $date);
+  $monthInString= $monthInString[0];
+
+  $monthInDecimal= $months["$monthInString"];
+
+  $dayInDecimal= explode(" ", $date);
+  $dayInDecimal= str_replace(",", "", $dayInDecimal[1]);
+
+  $yearInDecimal= explode(" ", $date);
+  $yearInDecimal= $yearInDecimal[2];
+
+  $convertedDate= $yearInDecimal . "-" . $monthInDecimal . "-" . $dayInDecimal;
+
+  //January, 01, 2021
+  return $convertedDate;
+
+}
+
+
 //it will convert the time format from 16:00 to 04:00 PM
 public function convertTimeToEISFormat($time){
   
@@ -498,6 +555,326 @@ public function getCustomeAttendanceSheet($id, $date, $status){
 }
 
 }
+
+
+
+//return the leaves that are allowed according to the scale and designation and other information.
+public function getLeavesSettings($id){
+  if(isAdminValid($id)){
+  global $link;
+
+  $stmt= $link->prepare("SELECT * FROM `designations` WHERE allowed_leaves !='' AND paid_leave_charges != ''");
+  $stmt->execute();
+
+  while($row= $stmt->fetch()){
+    $designationID= $row['id'];
+    $designation_name= $row['designation_name'];
+    $pay_scale= $row['pay_scale'];
+    $allowed_leaves= $row['allowed_leaves'];
+    $paid_leaves_charges= $row['paid_leave_charges'];
+
+    echo "<tr>
+   <form action='../core/view/dataParser?f=deleteLeaveSetting' method='POST'>
+    <td>$designation_name</td>
+    <td>$pay_scale</td>
+    <td>$allowed_leaves</td>
+    <td>$paid_leaves_charges</td>
+    <input type='hidden' value='$designation_name' name='designation'>
+    <td><input type='submit' name='deleteLeaveSetting' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?' value='Delete'></td>
+    </form>
+    </tr>";
+  }
+}else{
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
+            exit();
+            return false;
+}
+
+
+}
+
+
+
+
+//it will return leave request record of specific employee
+public function getLeavesRecordForAdmin(){
+  global $link;
+
+  $stmt= $link->prepare("SELECT * FROM `leaves_requests` WHERE request_status='' ORDER BY id DESC");
+
+      $stmt->execute();
+    
+      while($row= $stmt->fetch()){
+      
+      $id= $row['id'];
+      $request_id= $row['request_id'];
+      $employeeID= $row['employeeID'];
+      $no_of_leaves= $row['no_of_leaves'];
+      $leaves_from= $row['leaves_from'];
+      $leaves_to= $row['leaves_to'];
+      $leave_type= $row['leave_type'];
+      $report_back_date= $row['report_back_date'];
+      $reason= $row['reason'];
+      $request_status= $row['request_status'];
+      $remarks= $row['remarks'];
+
+      $stmt2= $link->prepare("SELECT full_name FROM `employees` WHERE employeeID= :employeeID");
+      $stmt2->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+      $stmt2->execute();
+      while($row2= $stmt2->fetch()){
+        $full_name= $row2['full_name'];
+      }
+        
+
+      echo "<tr class='odd gradeX'>
+      <td>$employeeID</td>
+      <td>$full_name</td>
+      <td>$no_of_leaves</td>
+      <td>$leaves_from</td>
+      <td>$leaves_to</td>
+      <td>$leave_type</td>
+      <td>
+          <button data-id='$request_id' class='leaveRequestDetails icon-color'><i class='fa fa-eye'></i></button>
+      </td>
+  </tr>";
+
+
+    }
+
+
+}
+
+public function getLeavesOfMonth($employeeID, $dateInEISFormat){
+  global $link;
+  $month= explode(" ", $dateInEISFormat);
+  $month= $month[0];
+
+  $stmt= $link->prepare("SELECT COUNT(punch_out_timestamp) AS present_days FROM `attendance_sheet` WHERE employeeID= :employeeID
+                         AND punch_out_timestamp LIKE '$month%'");
+  $stmt->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+  $stmt->execute();
+  while($row= $stmt->fetch()){
+    $present_days= $row['present_days'];
+  }
+
+  //total days in given month
+  $dateInDefault= $this->convertDateToDefaultFormat($dateInEISFormat);
+  $yearDF= explode("-", $dateInDefault);
+  $yearDF= $yearDF[0];
+
+  $monthDF= explode("-", $dateInDefault);
+  $monthDF= $monthDF[1];
+
+  $dayDF= explode("-", $dateInDefault);
+  $dayDF= $dayDF[2];
+
+  $totalDaysInGivenMonth= cal_days_in_month(CAL_GREGORIAN, $monthDF, $yearDF);
+  
+  if($dayDF <= $totalDaysInGivenMonth){
+    $remainingDays= $totalDaysInGivenMonth - $dayDF;
+
+    $leaves= ($totalDaysInGivenMonth - $remainingDays) - $present_days;
+  }elseif($dayDF === $totalDaysInGivenMonth){
+    $leaves= $totalDaysInGivenMonth - $present_days;
+  }
+
+  return $leaves;
+}
+
+
+
+//return the allowances data
+public function getAllowances($query, $args, $id){
+  if(isAdminValid($id)){
+  global $link;
+
+    if($query=="getListForTable"){
+      $stmt= $link->prepare("SELECT * FROM `allowances`");
+      $stmt->execute();
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $allowance_name= $row['allowance_name'];
+        $allowance_code= $row['allowance_code'];
+        $pay_scale= $row['pay_scale'];
+        $allowance_percentage= $row['allowance_percentage'];
+        $posted_by= $row['posted_by'];
+    
+        echo "<tr>
+       <form action='../core/view/dataParser?f=deleteAllowances' method='POST'>
+        <td>$allowance_code</td>
+        <td>$allowance_name</td>
+        <td>$allowance_percentage%</td>
+        <td>$pay_scale</td>
+        <td>$posted_by</td>
+        <input type='hidden' value='$id' name='id'>
+        <td><input type='submit' name='deleteAllowance' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?' value='Delete'></td>
+        </form>
+        </tr>";
+      }
+    }elseif($query=="getListForDropDown"){
+      $result= NULL;
+      $pay_scale= $args['pay_scale'];
+      $employeeID= $args['forEmployee'];
+      $username= $args['username'];
+
+      //get the allowances that are already issued to the employee
+      $arr= $this->getUserData($username);
+      $userID= $arr['id'];
+
+      $data= $this->getUserDetails($userID);
+      $allowancesIssued= $data['allowances'];
+      $allowancesIssuedArray= explode(",", $allowancesIssued);
+
+      $allowancesSQL= join("','", $allowancesIssuedArray);
+
+      $stmt= $link->prepare("SELECT * FROM `allowances` WHERE allowance_code NOT IN ('$allowancesSQL') AND pay_scale= :pay_scale");
+      $stmt->bindParam(":pay_scale", $pay_scale);
+      $stmt->execute();
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $allowance_name= $row['allowance_name'];
+        $allowance_code= $row['allowance_code'];
+        $pay_scale= $row['pay_scale'];
+        $allowance_percentage= $row['allowance_percentage'];
+        $posted_by= $row['posted_by'];
+
+        
+        $optionValues= "<option>$allowance_code $allowance_name @ $allowance_percentage%</option>";
+        $result .= $optionValues;
+        
+
+    }
+    return $result;
+
+}else{
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
+            exit();
+            return false;
+}
+
+  }
+}
+
+
+//return the deductions data
+public function getDeductions($query, $args, $id){
+  if(isAdminValid($id)){
+  global $link;
+
+    if($query=="getListForTable"){
+      $stmt= $link->prepare("SELECT * FROM `deductions`");
+      $stmt->execute();
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $deduction_code= $row['deduction_code'];
+        $deduction_name= $row['deduction_name'];
+        $deduction_type= $row['deduction_type'];
+        $pay_scale= $row['pay_scale'];
+        $deduction_percentage= $row['deduction_percentage'];
+        $posted_by= $row['posted_by'];
+    
+        echo "<tr>
+       <form action='../core/view/dataParser?f=deleteDeductions' method='POST'>
+        <td>$deduction_code</td>
+        <td>$deduction_name</td>
+        <td>$deduction_type</td>
+        <td>$pay_scale</td>
+        <td>$deduction_percentage%</td>
+        <input type='hidden' value='$id' name='id'>
+        <td><input type='submit' name='deleteDeduction' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?' value='Delete'></td>
+        </form>
+        </tr>";
+      }
+    }elseif($query=="getListForDropDown"){
+      $result= NULL;
+      $pay_scale= $args['pay_scale'];
+      $employeeID= $args['forEmployee'];
+      $username= $args['username'];
+
+      //get the deductions that are already issued to the employee
+      $arr= $this->getUserData($username);
+      $userID= $arr['id'];
+
+      $data= $this->getUserDetails($userID);
+      $deductionsIssued= $data['deductions'];
+      $deductionsIssuedArray= explode(",", $deductionsIssued);
+
+      $deductionsSQL= join("','", $deductionsIssuedArray);
+
+      $stmt= $link->prepare("SELECT * FROM `deductions` WHERE deduction_code NOT IN ('$deductionsSQL') AND pay_scale= :pay_scale");
+      $stmt->bindParam(":pay_scale", $pay_scale);
+      $stmt->execute();
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $deduction_name= $row['deduction_name'];
+        $deduction_code= $row['deduction_code'];
+        $deduction_type= $row['deduction_type'];
+        $pay_scale= $row['pay_scale'];
+        $deduction_percentage= $row['deduction_percentage'];
+        $posted_by= $row['posted_by'];
+
+        
+        $optionValues= "<option>$deduction_code $deduction_name @ $deduction_percentage%</option>";
+        $result .= $optionValues;
+        
+
+    }
+    return $result;
+
+    }  
+
+}else{
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
+            exit();
+            return false;
+}
+
+}
+
+
+
+
+//return the deductions data
+public function getEmployeesForPaymentSettings($id){
+  if(isAdminValid($id)){
+  global $link;
+
+  $stmt= $link->prepare("SELECT * FROM `employees`");
+  $stmt->execute();
+
+  while($row= $stmt->fetch()){
+    $id= $row['id'];
+    $employeeID= $row['employeeID'];
+    $full_name= $row['full_name'];
+    $pay_scale= $row['pay_scale'];
+    $allowances= $row['allowances'];
+    $deductions= $row['deductions'];
+    $posted_by= $row['posted_by'];
+
+    echo "<tr>
+   <form action='../core/view/dataParser?f=deleteDeductions' method='POST'>
+    <td>$deduction_code</td>
+    <td>$deduction_name</td>
+    <td>$deduction_type</td>
+    <td>$pay_scale</td>
+    <td>$deduction_percentage%</td>
+    <input type='hidden' value='$id' name='id'>
+    <td><input type='submit' name='deleteDeduction' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?' value='Delete'></td>
+    </form>
+    </tr>";
+  }
+}else{
+  header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
+            exit();
+            return false;
+}
+
+}
+
 
   
   

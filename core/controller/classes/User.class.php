@@ -16,8 +16,18 @@ class User{
         $full_name= $row['full_name'];
         $access_level= $row['access_level'];
         $account_status= $row['account_status'];
+
+        $stmt= $link->prepare("SELECT employeeID FROM `employees` WHERE username= :username");
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+        $stmt->execute();
+      
+        while($row1= $stmt->fetch()){
+        
+        $employeeID= $row1['employeeID'];
+        }
     
        echo "<tr class='odd gradeX'>
+        <td>$employeeID</td>
         <td>$username</td>
         <td>$full_name</td>
         <td>$access_level</td>
@@ -101,6 +111,7 @@ class User{
           $designation= $row2['designation'];
           $pay_scale= $row2['pay_scale'];
           $allowances= $row2['allowances'];
+          $deductions= $row2['deductions'];
           $profile_picture= $row2['profile_picture'];
           $registered_by= $row2['registered_by'];
           $registered_at= $row2['registered_at'];
@@ -115,12 +126,22 @@ class User{
           $department_code= $row3['department_code'];
         }
 
+        //get department details from designations table
+        $stmt3= $link->prepare("SELECT * FROM `designations` WHERE designation_name= :designation_name");
+        $stmt3->bindParam(":designation_name", $designation, PDO::PARAM_STR);
+        $stmt3->execute();
+        while($row4= $stmt3->fetch()){
+          $allowed_leaves= $row4['allowed_leaves'];
+          $paid_leave_charges= $row4['paid_leave_charges'];
+        }
+
 
       $result= array("id"=>"$id", "username"=>"$username", "employeeID" => "$employeeID", "full_name"=>"$full_name", 
       "education" => "$education", "department" => "$department", "department_code"=>$department_code, "designation"=> "$designation", "pay_scale" => "$pay_scale"
-      , "allowances" => "$allowances", "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
+      , "allowances" => "$allowances", "deductions"=>"$deductions", "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
       "registered_at" => "$registered_at", "last_edit_by" => "$last_edit_by", "last_edit_at" => "$last_edit_at","contact_no"=>"$contact",
-      "email" => "$email", "access_level" => "$access_level", "account_status" => "$account_status", "remarks"=>"$remarks");
+      "email" => "$email", "access_level" => "$access_level", "account_status" => "$account_status", "remarks"=>"$remarks", "allowed_leaves"=>"$allowed_leaves", 
+       "paid_leave_charges"=>"$paid_leave_charges");
       }
       return $result;
     

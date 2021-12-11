@@ -29,15 +29,7 @@ $employeeObject= new EmployeeController();
                         <i class="fa fa-user fa-3x"></i>
                     </a>
                    <!-- dropdown user--> 
-                   <ul class="dropdown-menu dropdown-user">
-                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#userProfile"><i class="fa fa-user fa-fw"></i>Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="javascript:void(0)" onclick="location.href='../core/modal/Auth/logout'"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
-                        </li>
-                    </ul>
+                   <?php echo $dropDownMenu; ?>
                     <!-- end dropdown-user -->
                 </li>
                 <!-- end main dropdown -->
@@ -99,18 +91,16 @@ $employeeObject= new EmployeeController();
                     //check for which modal content to show for attendance
                     $arr= $userObject->getUserDetails($_SESSION['id']);
                     $employeeID= $arr['employeeID'];
-                    if($userObject->getAttendanceStatus('', $employeeID) === TRUE){
+                    if($userObject->getAttendanceStatus('', $employeeID, date("F j, Y")) === TRUE){
                         echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendance'>Mark Attendance</button>";
                     }else{
                         echo "<button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#markAttendanceOut'>Mark Attendance</button>";
                     }
                     ?>
-                    
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#">View Attendance Sheet</button>
                                     <!-- Advanced Tables -->
                                     <div class="panel panel-default">
                         <div class="panel-heading">
-                             Attendance Sheet as of <?php echo date('F j, Y'); ?>
+                             Attendance Record <i class="fa fa-history fa-fw"></i>
                         </div>
                         
                         <div class="panel-body">
@@ -126,7 +116,7 @@ $employeeObject= new EmployeeController();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $userObject->getTodayAttendanceSheet(); ?>
+                                        <?php $employeeObject->getAttendanceRecord($_SESSION['username']); ?>
                                     </tbody>
                                 </table>
                             </div>

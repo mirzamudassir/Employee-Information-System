@@ -1,6 +1,7 @@
 <?php
 require_once 'config.inc.php';
 
+//singelton pattern 
 final class Db{
     private static $instance= NULL;
     private $host= DATABASE_HOST;
@@ -15,7 +16,7 @@ final class Db{
         $this->conn= new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->db_username, $this->db_password);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }catch(PDOException $ex){
-            header("Location: http://localhost:8080/project/public/error?error=ERR_DB_CONN");
+            header("Location: http://localhost/project/public/error?error=ERR_DB_CONN");
         }
     } 
 
@@ -26,7 +27,7 @@ final class Db{
         }
         return self::$instance;
     }catch(PDOException $ex){
-        header("Location: http://localhost:8080/project/public/error?error=ERR_DB_CONN");
+        header("Location: http://localhost/project/public/error?error=ERR_DB_CONN");
     }
     }
 

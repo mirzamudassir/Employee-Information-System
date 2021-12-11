@@ -82,8 +82,8 @@ $userObject= new UserController();
     }
         //dispose the db connection
         $link= NULL;
-        //dispose the userObject
-        $userObject= NULL;
+        
+        
         }
 
             function updateUser($usernameForUpdate, $full_name, $education,
@@ -323,5 +323,271 @@ $userObject= new UserController();
                         //dispose the db connection
                         $link= NULL;
                     }
+
+
+                    function postLeaveSettings($designation, $allowed_leaves, $paid_leave_charges){
+                        global $link;
+                        
+                        $query= $link->prepare("UPDATE `designations` SET allowed_leaves = :allowed_leaves, paid_leave_charges= :paid_leave_charges
+                                                WHERE designation_name= :designation_name");
+                        $query->bindParam(":allowed_leaves", $allowed_leaves, PDO::PARAM_INT);
+                        $query->bindParam(":paid_leave_charges", $paid_leave_charges, PDO::PARAM_STR);
+                        $query->bindParam(":designation_name", $designation, PDO::PARAM_STR);
+                
+                        if($query->execute()){
+                            $_SESSION['notifStatus']= "Settings Saved";
+                            redirect_to("../../public/leaveManager");
+                        }
+                        
+                        else{
+                            $_SESSION['notifStatus']= "Error";
+                            redirect_to("../../public/leaveManager");
+                        }
+                        //dispose the db connection
+                        $link= NULL;
+                        }
+
+
+                        function deleteLeaveSetting($designation){
+                            global $link;
+                        
+                            $query= $link->prepare("UPDATE `designations` SET allowed_leaves= NULL, paid_leave_charges= ''
+                                                    WHERE designation_name= :designation_name");
+                            $query->bindParam(":designation_name", $designation, PDO::PARAM_STR);
+            
+                            if($query->execute() === TRUE){
+                                $_SESSION['notifStatus']= "Settings Removed";
+                                redirect_to("../../public/leaveManager");
+                            }
+                        
+                            else{
+                                $_SESSION['notifStatus']= "Error";
+                                redirect_to("../../public/leaveManager");
+                            }
+            
+                            //dispose the db connection
+                            $link= NULL;
+                        }
+
+
+
+                        function postLeaveRequest($employeeID, $no_of_leaves, $leaves_from, $leaves_to, $leave_type, $report_back_date, $reason){
+                            global $link;
+                            global $userObject;
+
+                            $leaveRequestID= $userObject->generateLeaveRequestID();
+                            $leaves_from= $userObject->convertDateToEISFormat($leaves_from);
+                            $leaves_to= $userObject->convertDateToEISFormat($leaves_to);
+                            $report_back_date= $userObject->convertDateToEISFormat($report_back_date);
+                        
+                            $query= $link->prepare("INSERT INTO `leaves_requests` (request_id, employeeID, no_of_leaves, leaves_from, leaves_to, 
+                            report_back_date, leave_type, reason) VALUES (:request_id, :employeeID, :no_of_leaves, :leaves_from, :leaves_to, 
+                            :report_back_date, :leave_type, :reason)");
+                            
+                            $query->bindParam(":request_id", $leaveRequestID, PDO::PARAM_STR);
+                            $query->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+                            $query->bindParam(":no_of_leaves", $no_of_leaves, PDO::PARAM_STR);
+                            $query->bindParam(":leaves_from", $leaves_from, PDO::PARAM_STR);
+                            $query->bindParam(":leaves_to", $leaves_to, PDO::PARAM_STR);
+                            $query->bindParam(":report_back_date", $report_back_date, PDO::PARAM_STR);
+                            $query->bindParam(":leave_type", $leave_type, PDO::PARAM_STR);
+                            $query->bindParam(":reason", $reason, PDO::PARAM_STR);
+            
+                            if($query->execute() === TRUE){
+                                $_SESSION['notifStatus']= "Request Submitted";
+                                redirect_to("../../public/leaveManager");
+                            }
+                        
+                            else{
+                                $_SESSION['notifStatus']= "Error";
+                                redirect_to("../../public/leaveManager");
+                            }
+            
+                            //dispose the db connection
+                            $link= NULL;
+                        }
+
+
+
+                          function rejectLeaveRequest($requestID, $remarks){
+
+                            global $link;
+
+                            //updates by
+                            $supervision_by= $_SESSION['username'];
+                            $supervision_timestamp= date("F j, Y, g:i a");
+                            $request_status= 'Rejected';
+
+                            $stmt= $link->prepare("UPDATE `leaves_requests` SET request_status= :request_status, remarks= :remarks, 
+                            supervision_by= :supervision_by, supervision_timestamp= :supervision_timestamp WHERE request_id= :request_id");
+                            $stmt->bindParam(":request_status", $request_status, PDO::PARAM_STR);
+                            $stmt->bindParam(":remarks", $remarks, PDO::PARAM_STR);
+                            $stmt->bindParam(":supervision_by", $supervision_by, PDO::PARAM_STR);
+                            $stmt->bindParam(":supervision_timestamp", $supervision_timestamp, PDO::PARAM_STR);
+                            $stmt->bindParam(":request_id", $requestID, PDO::PARAM_STR);
+
+                            if($stmt->execute() === TRUE){
+                                $_SESSION['notifStatus']= "Request Rejected";
+                                redirect_to("../../public/leaveManager");
+                            }else{
+                                $_SESSION['notifStatus']= "Error";
+                                redirect_to("../../public/leaveManager");
+                            }
+            
+                            //dispose the db connection
+                            $link= NULL;
+
+                            
+                        }
+
+
+
+                        function approveLeaveRequest($requestID, $remarks){
+
+                            global $link;
+
+                            //updates by
+                            $supervision_by= $_SESSION['username'];
+                            $supervision_timestamp= date("F j, Y, g:i a");
+                            $request_status= 'Approved';
+
+                            $stmt= $link->prepare("UPDATE `leaves_requests` SET request_status= :request_status, remarks= :remarks, 
+                            supervision_by= :supervision_by, supervision_timestamp= :supervision_timestamp WHERE request_id= :request_id");
+                            $stmt->bindParam(":request_status", $request_status, PDO::PARAM_STR);
+                            $stmt->bindParam(":remarks", $remarks, PDO::PARAM_STR);
+                            $stmt->bindParam(":supervision_by", $supervision_by, PDO::PARAM_STR);
+                            $stmt->bindParam(":supervision_timestamp", $supervision_timestamp, PDO::PARAM_STR);
+                            $stmt->bindParam(":request_id", $requestID, PDO::PARAM_STR);
+
+                            if($stmt->execute() === TRUE){
+                                $_SESSION['notifStatus']= "Request Approved";
+                                redirect_to("../../public/leaveManager");
+                            }else{
+                                $_SESSION['notifStatus']= "Error";
+                                redirect_to("../../public/leaveManager");
+                            }
+            
+                            //dispose the db connection
+                            $link= NULL;
+
+                            
+                        }
+
+
+
+                        
+            function postAllowances($allowance_code, $pay_scale, $allowance_name, $allowance_amount){
+                global $link;
+                $posted_by= $_SESSION['username'];
+                $posted_timestamp= date("F j, Y, g:i a");
+                
+                $query= $link->prepare("INSERT INTO `allowances` (allowance_code, pay_scale, allowance_name, allowance_percentage, posted_by, posted_timestamp) 
+                VALUES (:allowance_code, :pay_scale, :allowance_name, :allowance_percentage, :posted_by, :posted_timestamp)");
+                $query->bindParam(":allowance_code", $allowance_code, PDO::PARAM_STR);
+                $query->bindParam(":pay_scale", $pay_scale, PDO::PARAM_STR);
+                $query->bindParam(":allowance_name", $allowance_name, PDO::PARAM_STR);
+                $query->bindParam(":allowance_percentage", $allowance_amount, PDO::PARAM_STR);
+                $query->bindParam(":posted_by", $posted_by, PDO::PARAM_STR);
+                $query->bindParam(":posted_timestamp", $posted_timestamp, PDO::PARAM_STR);
+        
+                if($query->execute()){
+                    $_SESSION['notifStatus']= "Allowance Added";
+                    redirect_to("../../public/payroll");
+                }
+                
+                else{
+                    $_SESSION['notifStatus']= "Error";
+                    redirect_to("../../public/payroll");
+                }
+                //dispose the db connection
+                $link= NULL;
+                }
+
+
+
+                function deleteAllowances($allowance_ID){
+                    global $link;
+                
+                    $query= $link->prepare("DELETE FROM `allowances` WHERE id= :allowance_ID");
+                    $query->bindParam(':allowance_ID', $allowance_ID, PDO::PARAM_INT);
+    
+                    if($query->execute() === TRUE){
+                        $arr= array("Allowance Deleted");
+                        $_SESSION['notifStatus']= $arr;
+                        redirect_to("../../public/payroll");
+                    }
+                
+                    else{
+                        $_SESSION['notifStatus']= "Error";
+                        redirect_to("../../public/payroll");
+                    }
+    
+                    //dispose the db connection
+                    $link= NULL;
+                }
+
+
+
+
+                function postDeductions($deduction_code, $deduction_name, $deduction_type, $deduction_amount, $pay_scale){
+                    global $link;
+                    $posted_by= $_SESSION['username'];
+                    $posted_timestamp= date("F j, Y, g:i a");
+                    
+                    $query= $link->prepare("INSERT INTO `deductions` (deduction_code, deduction_name, deduction_type, deduction_percentage, pay_scale, posted_by, posted_timestamp) 
+                    VALUES (:deduction_code, :deduction_name, :deduction_type, :deduction_percentage, :pay_scale, :posted_by, :posted_timestamp)");
+                    $query->bindParam(":deduction_code", $deduction_code, PDO::PARAM_STR);
+                    $query->bindParam(":deduction_name", $deduction_name, PDO::PARAM_STR);
+                    $query->bindParam(":deduction_type", $deduction_type, PDO::PARAM_STR);
+                    $query->bindParam(":deduction_percentage", $deduction_amount, PDO::PARAM_STR);
+                    $query->bindParam(":pay_scale", $pay_scale, PDO::PARAM_STR);
+                    $query->bindParam(":posted_by", $posted_by, PDO::PARAM_STR);
+                    $query->bindParam(":posted_timestamp", $posted_timestamp, PDO::PARAM_STR);
+            
+                    if($query->execute()){
+                        $_SESSION['notifStatus']= "Deduction Added";
+                        redirect_to("../../public/payroll");
+                    }
+                    
+                    else{
+                        $_SESSION['notifStatus']= "Error";
+                        redirect_to("../../public/payroll");
+                    }
+                    //dispose the db connection
+                    $link= NULL;
+                    }
+    
+    
+    
+                    function deleteDeductions($deduction_ID){
+                        global $link;
+                    
+                        $query= $link->prepare("DELETE FROM `deductions` WHERE id= :deduction_ID");
+                        $query->bindParam(':deduction_ID', $deduction_ID, PDO::PARAM_INT);
+        
+                        if($query->execute() === TRUE){
+                            $arr= array("Deduction Deleted");
+                            $_SESSION['notifStatus']= $arr;
+                            redirect_to("../../public/payroll");
+                        }
+                    
+                        else{
+                            $_SESSION['notifStatus']= "Error";
+                            redirect_to("../../public/payroll");
+                        }
+        
+                        //dispose the db connection
+                        $link= NULL;
+                    }
+                       
+
+
+
+
+
+
+
+
+
     
 ?>

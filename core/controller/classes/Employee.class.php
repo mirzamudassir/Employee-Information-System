@@ -59,11 +59,11 @@ class Employee{
       }
 
 
-      protected function getUserDetails($userID){
+      protected function getUserDetails($username){
         global $link;
     
-        $query= $link->prepare("SELECT * FROM `user_accounts` WHERE id= :id");
-        $query->bindParam(":id", $userID, PDO::PARAM_STR);
+        $query= $link->prepare("SELECT * FROM `user_accounts` WHERE username= :username");
+        $query->bindParam(":username", $username, PDO::PARAM_STR);
         $query->execute();
       
         while($row= $query->fetch()){
@@ -93,7 +93,6 @@ class Employee{
           $department= $row2['department'];
           $designation= $row2['designation'];
           $pay_scale= $row2['pay_scale'];
-          $basic_salary= $row2['basic_salary'];
           $allowances= $row2['allowances'];
           $profile_picture= $row2['profile_picture'];
           $registered_by= $row2['registered_by'];
@@ -104,7 +103,7 @@ class Employee{
 
       $result= array("id"=>"$id", "username"=>"$username", "employeeID" => "$employeeID", "full_name"=>"$full_name", 
       "education" => "$education", "department" => "$department", "designation"=> "$designation", "pay_scale" => "$pay_scale", 
-      "basic_salary" => "$basic_salary", "allowances" => "$allowances", "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
+       "allowances" => "$allowances", "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
       "registered_at" => "$registered_at", "last_edit_by" => "$last_edit_by", "last_edit_at" => "$last_edit_at","contact_no"=>"$contact",
       "email" => "$email", "access_level" => "$access_level", "account_status" => "$account_status");
       }

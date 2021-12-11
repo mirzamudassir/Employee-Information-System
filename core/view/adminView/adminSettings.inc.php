@@ -110,6 +110,7 @@ $userObject= new UserController();
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
+                                            <th>Emp #</th>
                                             <th>Username</th>
                                             <th>Full Name</th>
                                             <th>Access Level</th>
