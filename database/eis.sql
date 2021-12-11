@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2021 at 09:53 AM
+-- Generation Time: Dec 12, 2021 at 12:19 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -25,6 +25,90 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `allowances`
+--
+
+CREATE TABLE `allowances` (
+  `id` int(200) NOT NULL,
+  `allowance_code` varchar(50) NOT NULL,
+  `pay_scale` varchar(100) DEFAULT NULL,
+  `allowance_name` varchar(100) NOT NULL,
+  `allowance_percentage` varchar(100) NOT NULL,
+  `posted_by` varchar(200) NOT NULL,
+  `posted_timestamp` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `allowances`
+--
+
+INSERT INTO `allowances` (`id`, `allowance_code`, `pay_scale`, `allowance_name`, `allowance_percentage`, `posted_by`, `posted_timestamp`) VALUES
+(4, '0031', 'BPS 05', 'Medical Allowance', '20', 'admin', 'December 10, 2021, 9:56 pm'),
+(5, '0021', 'BPS 05', 'House Rent', '12', 'admin', 'December 10, 2021, 9:57 pm'),
+(6, '0031', 'BPS 06', 'Medical Allowance', '22', 'admin', 'December 12, 2021, 1:40 am');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attendance_sheet`
+--
+
+CREATE TABLE `attendance_sheet` (
+  `id` int(240) NOT NULL,
+  `employeeID` varchar(240) NOT NULL,
+  `punch_in_timestamp` varchar(50) NOT NULL,
+  `punch_out_timestamp` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `attendance_sheet`
+--
+
+INSERT INTO `attendance_sheet` (`id`, `employeeID`, `punch_in_timestamp`, `punch_out_timestamp`) VALUES
+(14, 'EIS-001', 'November 25, 2021, 1:04 pm', 'December 12, 2021, 12:28 am'),
+(16, 'EIS-001', 'November 26, 2021, 11:12 pm', 'December 12, 2021, 12:28 am'),
+(17, 'EIS-001', 'November 27, 2021, 12:39 am', 'December 12, 2021, 12:28 am'),
+(18, 'EIS-005', 'November 27, 2021, 12:43 am', 'November 27, 2021, 12:43 am'),
+(19, 'EIS-004', 'November 27, 2021, 6:40 pm', 'November 27, 2021, 6:49 pm'),
+(20, 'EIS-004', 'November 26, 2021, 11:12 pm', 'November 27, 2021, 12:43 am'),
+(21, 'EIS-001', 'November 30, 2021, 11:31 am', 'December 12, 2021, 12:28 am'),
+(22, 'EIS-002', 'November 30, 2021, 11:32 am', 'December 5, 2021, 5:37 pm'),
+(23, 'EIS-001', 'December 1, 2021, 12:14 am', 'December 12, 2021, 12:28 am'),
+(25, 'EIS-002', 'December 1, 2021, 12:20 am', 'December 5, 2021, 5:37 pm'),
+(26, 'EIS-001', 'December 5, 2021, 5:35 pm', 'December 12, 2021, 12:28 am'),
+(27, 'EIS-002', 'December 5, 2021, 5:36 pm', 'December 5, 2021, 5:37 pm'),
+(28, 'EIS-001', 'December 12, 2021, 12:05 am', 'December 12, 2021, 12:28 am');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deductions`
+--
+
+CREATE TABLE `deductions` (
+  `id` int(200) NOT NULL,
+  `deduction_code` varchar(50) NOT NULL,
+  `deduction_name` varchar(100) NOT NULL,
+  `deduction_type` varchar(100) NOT NULL,
+  `deduction_percentage` varchar(100) NOT NULL,
+  `pay_scale` varchar(100) NOT NULL,
+  `posted_by` varchar(200) NOT NULL,
+  `posted_timestamp` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `deductions`
+--
+
+INSERT INTO `deductions` (`id`, `deduction_code`, `deduction_name`, `deduction_type`, `deduction_percentage`, `pay_scale`, `posted_by`, `posted_timestamp`) VALUES
+(2, '3251', 'Tax on Income', 'Income Tax', '11', 'BPS 08', 'admin', 'December 10, 2021, 8:36 pm'),
+(3, '3251', 'Tax on Income', 'Income Tax', '16', 'BPS 05', 'admin', 'December 10, 2021, 9:57 pm'),
+(4, '3251', 'Tax on Income', 'Income Tax', '16', 'BPS 06', 'admin', 'December 12, 2021, 1:52 am'),
+(5, '3301', 'Group Insurance', 'Insurance', '5', 'BPS 05', 'admin', 'December 12, 2021, 2:43 am');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `departments`
 --
 
@@ -41,7 +125,8 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`id`, `department_code`, `department_name`, `enrolled_employees`, `visibility`) VALUES
-(2, '1234', 'Human Resource', '', 'Visible');
+(4, '3220', 'General Accounts', '', 'Visible'),
+(9, '1234', 'Human Resource', '', 'Visible');
 
 -- --------------------------------------------------------
 
@@ -54,6 +139,8 @@ CREATE TABLE `designations` (
   `designation_name` varchar(100) NOT NULL,
   `pay_scale` varchar(100) NOT NULL,
   `basic_salary` varchar(100) NOT NULL,
+  `allowed_leaves` int(20) DEFAULT NULL,
+  `paid_leave_charges` varchar(50) NOT NULL,
   `enrolled_employees` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -61,8 +148,11 @@ CREATE TABLE `designations` (
 -- Dumping data for table `designations`
 --
 
-INSERT INTO `designations` (`id`, `designation_name`, `pay_scale`, `basic_salary`, `enrolled_employees`) VALUES
-(3, 'Supervisor', 'BPS 05', '20000.00', '');
+INSERT INTO `designations` (`id`, `designation_name`, `pay_scale`, `basic_salary`, `allowed_leaves`, `paid_leave_charges`, `enrolled_employees`) VALUES
+(3, 'Supervisor', 'BPS 05', '20000.00', 2, '1500.00', ''),
+(5, 'Accountant', 'BPS 06', '30000.00', NULL, '', ''),
+(6, 'Clerk', 'BPS 05', '26000.00', NULL, '', ''),
+(7, 'Administrator', 'BPS 08', '80000.00', 2, '3000.00', '');
 
 -- --------------------------------------------------------
 
@@ -79,14 +169,57 @@ CREATE TABLE `employees` (
   `department` varchar(100) NOT NULL,
   `designation` varchar(100) NOT NULL,
   `pay_scale` varchar(100) NOT NULL,
-  `basic_salary` varchar(100) NOT NULL,
-  `allowances` varchar(100) NOT NULL,
+  `allowances` varchar(100) NOT NULL DEFAULT 'N/A',
+  `deductions` varchar(250) DEFAULT 'N/A',
   `profile_picture` varchar(100) NOT NULL,
   `registered_by` varchar(100) NOT NULL,
   `registered_at` varchar(100) NOT NULL,
   `last_edit_by` varchar(100) NOT NULL,
   `last_edit_at` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `username`, `employeeID`, `full_name`, `education`, `department`, `designation`, `pay_scale`, `allowances`, `deductions`, `profile_picture`, `registered_by`, `registered_at`, `last_edit_by`, `last_edit_at`) VALUES
+(10, 'admin', 'EIS-001', 'M. Touqeer', 'PHD. Computer Science', 'General Accounts', 'Administrator', 'BPS 08', 'N/A', 'N/A', '../assets/img/profilePictures/touqeer.jpg', 'Touqeer Ahmad', 'November 23, 2021, 5:35 pm', 'admin', 'November 29, 2021, 4:43 pm'),
+(19, 'awais', 'EIS-002', 'Awais Qarni', 'BS Computer Science', 'Human Resource', 'Supervisor', 'BPS 05', '0021,0031', '3301,3251', '../assets/img/profilePictures/awais.png', 'admin', 'November 29, 2021, 5:05 pm', 'admin', 'December 5, 2021, 6:50 pm'),
+(20, 'naveed', 'EIS-003', 'Naveed Ahmad', 'M.Phil Chemistry', 'General Accounts', 'Accountant', 'BPS 06', 'N/A', 'N/A', '../assets/img/profilePictures/IMG_20201006_185852.jpg', 'admin', 'November 29, 2021, 5:09 pm', 'admin', 'December 11, 2021, 11:44 pm');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leaves_requests`
+--
+
+CREATE TABLE `leaves_requests` (
+  `id` int(200) NOT NULL,
+  `request_id` varchar(200) NOT NULL,
+  `employeeID` varchar(100) NOT NULL,
+  `no_of_leaves` int(50) NOT NULL,
+  `leaves_from` varchar(50) NOT NULL,
+  `leaves_to` varchar(50) NOT NULL,
+  `report_back_date` varchar(50) NOT NULL,
+  `leave_type` varchar(50) NOT NULL,
+  `reason` varchar(250) NOT NULL,
+  `request_status` varchar(50) NOT NULL,
+  `remarks` varchar(250) NOT NULL,
+  `supervision_by` varchar(50) NOT NULL,
+  `supervision_timestamp` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `leaves_requests`
+--
+
+INSERT INTO `leaves_requests` (`id`, `request_id`, `employeeID`, `no_of_leaves`, `leaves_from`, `leaves_to`, `report_back_date`, `leave_type`, `reason`, `request_status`, `remarks`, `supervision_by`, `supervision_timestamp`) VALUES
+(5, 'LR001', 'EIS-002', 1, 'December 01, 2021', 'December 01, 2021', 'December 02, 2021', 'Casual Leave', 'wedding function', 'Rejected', 'too much leaves this month', 'admin', 'November 30, 2021, 11:23 pm'),
+(6, 'LR002', 'EIS-002', 1, 'December 01, 2021', 'December 01, 2021', 'December 02, 2021', 'Paid Leave', 'wedding function', 'Approved', 'paid', 'admin', 'November 30, 2021, 11:23 pm'),
+(7, 'LR003', 'EIS-002', 2, 'December 04, 2021', 'December 05, 2021', 'December 06, 2021', 'Casual Leave', 'wedding', 'Rejected', 'it will be paid.. make another request', 'admin', 'December 3, 2021, 11:51 pm'),
+(8, 'LR004', 'EIS-002', 2, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Casual Leave', 'wedding function', 'Rejected', 'it will be paid leave only', 'admin', 'December 5, 2021, 5:41 pm'),
+(9, 'LR005', 'EIS-002', 2, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Paid Leave', 'wedding function', 'Approved', 'ok', 'admin', 'December 5, 2021, 5:41 pm'),
+(10, 'LR006', 'EIS-002', 1, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Casual Leave', 'd', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -103,21 +236,40 @@ CREATE TABLE `user_accounts` (
   `contact_no` varchar(240) NOT NULL,
   `email` varchar(200) NOT NULL,
   `access_level` varchar(200) NOT NULL,
-  `account_status` varchar(200) NOT NULL
+  `account_status` varchar(200) NOT NULL,
+  `remarks` varchar(240) NOT NULL DEFAULT 'N/A'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_accounts`
 --
 
-INSERT INTO `user_accounts` (`id`, `username`, `password_hash`, `full_name`, `designation`, `contact_no`, `email`, `access_level`, `account_status`) VALUES
-(5, 'admin', '$2y$12$ExPOtVagbYg7FxHb0BsP5uVXk3z3NMXXJKVNkhBXNKtadn/33BHrq', 'Touqeer Ahmad', 'Administrator', '0301123456789', '', 'ADMIN', 'ACTIVE'),
-(6, 'employee', '$2y$10$ImXs9oiUODUeVjpLN9/W9eyfqwiaf.XYSZ84jJimwBcZgyOXLOsWm', 'Mudassir Mirza', 'Employee', '03027557810', '', 'USER', 'ACTIVE'),
-(51, 'mudassir', '$2y$10$BJFvchawz87CGpwYdEOzJOJ4BL5zcgs9jewr.3H6qtbNw4rk/v9DG', 'Mudassir Mirza', 'Supervisor', '03027557810', 'mirzamudassir202@gmail.com', 'USER', 'ACTIVE');
+INSERT INTO `user_accounts` (`id`, `username`, `password_hash`, `full_name`, `designation`, `contact_no`, `email`, `access_level`, `account_status`, `remarks`) VALUES
+(5, 'admin', '$2y$10$To5QW2qqlKqrsalu4Bydj.I2djBHOHZASXf6QLRXVabxUops4EOBa', 'M. Touqeer', 'Administrator', '0301-7064021', 'mc190401547@vu.edu.pk', 'ADMIN', 'ACTIVE', 'email updated'),
+(69, 'awais', '$2y$10$QouXgSeQKVXztkxLMXgDnO/FuXtcLaC06Div4fdo4.NVBmeVIcstS', 'Awais Qarni', 'Supervisor', '0300-1234567', 'awais@gmail.com', 'USER', 'ACTIVE', ''),
+(70, 'naveed', '$2y$10$LiwzWZgEzrdP0XFK8LEARuP8VSfOqRWrqRZL34nMZ/F6UV00xEHJ6', 'Naveed Ahmad', 'Accountant', '0300-1234567', 'naveed@gmail.com', 'USER', 'ACTIVE', 'picture updated');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `allowances`
+--
+ALTER TABLE `allowances`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `attendance_sheet`
+--
+ALTER TABLE `attendance_sheet`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `deductions`
+--
+ALTER TABLE `deductions`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `departments`
@@ -138,6 +290,12 @@ ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `leaves_requests`
+--
+ALTER TABLE `leaves_requests`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `user_accounts`
 --
 ALTER TABLE `user_accounts`
@@ -148,28 +306,52 @@ ALTER TABLE `user_accounts`
 --
 
 --
+-- AUTO_INCREMENT for table `allowances`
+--
+ALTER TABLE `allowances`
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `attendance_sheet`
+--
+ALTER TABLE `attendance_sheet`
+  MODIFY `id` int(240) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `deductions`
+--
+ALTER TABLE `deductions`
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(240) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(240) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `designations`
 --
 ALTER TABLE `designations`
-  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `leaves_requests`
+--
+ALTER TABLE `leaves_requests`
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_accounts`
 --
 ALTER TABLE `user_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
