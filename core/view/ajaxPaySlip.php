@@ -69,7 +69,14 @@ $payee_name= $full_name;
 $organization_name= "Employee Information System V1.0";
 
 $arr= explode(',', $payment_timestamp, 2);
-$forTheMonthOf= $arr[0];
+$forMonth= $arr[0];
+
+//adding 20 before the year value to make it e.g 2021
+$string = $forMonth;
+preg_match_all('!\d+!', $string, $matches);
+$num= $matches['0']['0'];
+$newNum= '20' . $num;
+$forTheMonthOf= str_replace($num, $newNum, $string);
 
 $sumOfAllowances= ($basic_pay / 100) * $userObject->getSumOfAllowances($paid_allowances, $pay_scale);
 $sumOfDeductions= ($basic_pay / 100) * $userObject->getSumOfDeductions($paid_deductions, $pay_scale);
