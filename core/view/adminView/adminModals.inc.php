@@ -355,7 +355,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
 
                                         <div class="form-group to-left-70">
                                             <label>Punch In Timestamp <span class="title-red">*</span></label>
-                                            <input class="form-control" name="last_timestamp" value='<?php echo $userControllerObject->getAttendanceStatus('details', $userDetails['employeeID'], date("F j, Y")) ?>' type="varchar" disabled>
+                                            <input class="form-control" name="punch_in_timestamp" value='<?php echo $userControllerObject->getAttendanceStatus('details', $userDetails['employeeID'], date("F j, Y")) ?>' type="varchar" readonly>
                                         </div>
                             
                                         <div class="form-group to-left-70">
@@ -654,41 +654,6 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                                 </div>
                             </div>
                         <!-- Manage Deductions Modal Alrt End -->
-
-
-                         <!-- Payment Settings Modal Alert Start -->
-<div class="modal fade" id="paymentSettings" tabindex="-1" role="dialog" aria-labelledby="paymentSettings" aria-hidden="true">
-<div class="modal-dialog" style="width:60%">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> Payment Settings</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        <form action="" method="POST">
-                            
-                                        <div class="form-group to-left-50">
-                                            <label>Emp # <span class="title-red">*</span></label>
-                                            <input class="form-control" name="employeeIDForPaymentSettings" value="EIS-" type="varchar" maxlength="30" autocomplete="off" required>
-                                           
-                                        </div>
-
-                                       <input type="submit" name="paymentSettings" class="btn btn-success button-right-50 getPaymentSettings" data-id="" value="Search">
-                                        </form>
-
-                                        <div class="table-responsive" id="paymentSettingsResult">
-                                         
-                                        </div>
-                                        
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- Payment Settings Modal Alrt End -->
-
-
-
 
 
                         <?php require_once 'adminFooter.inc.php' ?>

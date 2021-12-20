@@ -100,7 +100,7 @@ switch($func){
                 // Allow certain file formats
              if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
 
-                $arr= array("Error", $profile_picture);
+                $arr= array("Error", "Only JPG, PNG file types are allowed.");
                         $_SESSION['notifStatus']= $arr;
                         redirect_to("../../public/settings");
                 }else{
@@ -178,8 +178,9 @@ switch($func){
         case 'markAttendanceOut':
             $employeeID= trim($_POST['employeeID']);
             $punch_out_timestamp= trim($_POST['punch_out_timestamp']);
+            $punch_in_timestamp= trim($_POST['punch_in_timestamp']);
             
-            markAttendanceOut($employeeID, $punch_out_timestamp);
+            markAttendanceOut($employeeID, $punch_out_timestamp, $punch_in_timestamp);
 
             break;
 
@@ -269,6 +270,54 @@ switch($func){
                 $deduction_ID= trim($_POST['id']);
         
                 deleteDeductions($deduction_ID);
+                break;
+
+
+            case 'updatePaymentSettings':
+                
+                if(isset($_POST['allowances'])){
+                $allowances= implode(",", $_POST['allowances']);
+                }else{
+                    $allowances= NULL;
+                }
+
+                if(isset($_POST['deductions'])){
+                $deductions= implode(",", $_POST['deductions']);
+                }else{
+                    $deductions= NULL;
+                }
+
+                $employeeID= trim($_POST['employeeID']);
+        
+                updatePaymentSettings($employeeID, $allowances, $deductions);
+                break;
+            
+
+            case 'deletePaymentSettings':
+
+                $deduction_ID= trim($_POST['id']);
+        
+                deleteDeductions($deduction_ID);
+                break;
+            
+
+            case 'makePayment':
+
+                $paid_to= trim($_POST['paid_to']);
+                $paid_amount= trim($_POST['paid_amount']);
+                $paid_allowances_serialized= trim($_POST['paid_allowances']);
+                $paid_allowances_amount= trim($_POST['paid_allowances_amount']);
+                $paid_deductions_serialized= trim($_POST['paid_deductions']);
+                $paid_deductions_amount= trim($_POST['paid_deductions_amount']);
+
+                //unserialize the data
+                $paid_allowances_array= unserialize($paid_allowances_serialized);
+                $paid_deductions_array= unserialize($paid_deductions_serialized);
+                //convert it into string
+                $paid_allowances= implode(",", $paid_allowances_array);
+                $paid_deductions= implode(",", $paid_deductions_array);
+        
+                makePayment($paid_to, $paid_amount, $paid_allowances, $paid_allowances_amount, $paid_deductions, $paid_deductions_amount);
                 break;
 
 

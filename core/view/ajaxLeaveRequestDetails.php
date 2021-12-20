@@ -82,7 +82,7 @@ echo "
 <div style='color: red;'>Leaves in Current month: $leaves_this_month</div>
 <div style='color: red; margin-top:3%;'>Paid Leave Charges (Per Leave): $paid_leave_charges PKR
 
-<input type='text' class='form-control to-right-50' name='remarks' placeholder='Remarks' autocomplete='off' required>
+<input type='text' class='form-control to-right-50' name='remarks' placeholder='Remarks' autocomplete='off'>
 <input type='hidden' name='requestID' value='$request_id'>
 </div>
 

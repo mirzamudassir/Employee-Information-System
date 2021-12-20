@@ -173,7 +173,7 @@ public function getErrorNotification(){
                             icon: 'error',
                             title: eval(JSON.stringify(flag[0])),
                             text: eval(JSON.stringify(flag[1])),
-                            timer: 3000 //3 seconds
+                            timer: 6000 //6 seconds
                           });
                       </script>
 <?php
@@ -197,7 +197,7 @@ unset($_SESSION['notifStatus']);
                           var flag= <?php echo json_encode($flag); ?>
                           
                    swal({
-                   title: JSON.stringify(flag),
+                   title: flag,
                    icon: "success",
                    button: "Ok",
                    });
@@ -628,6 +628,7 @@ public function getLeavesRecordForAdmin(){
 
       echo "<tr class='odd gradeX'>
       <td>$employeeID</td>
+      <td>$request_id</td>
       <td>$full_name</td>
       <td>$no_of_leaves</td>
       <td>$leaves_from</td>
@@ -678,7 +679,18 @@ public function getLeavesOfMonth($employeeID, $dateInEISFormat){
     $leaves= $totalDaysInGivenMonth - $present_days;
   }
 
-  return $leaves;
+  $no_of_leaves= NULL;
+  //look for paid approved leaves
+  $stmt2= $link->prepare("SELECT no_of_leaves FROM `leaves_requests` WHERE employeeID= :employeeID 
+                          AND leave_type != 'Paid Leave' AND request_status= 'Approved'");
+  $stmt2->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+  $stmt2->execute();
+  while($row2= $stmt2->fetch()){
+    $no_of_leaves= $row2['no_of_leaves'];
+  }
+
+
+  return $leaves - $no_of_leaves;
 }
 
 
@@ -741,14 +753,138 @@ public function getAllowances($query, $args, $id){
         $posted_by= $row['posted_by'];
 
         
-        $optionValues= "<option>$allowance_code $allowance_name @ $allowance_percentage%</option>";
+        $optionValues= "<option value='$allowance_code'>$allowance_code $allowance_name @ $allowance_percentage%</option>";
         $result .= $optionValues;
         
 
     }
     return $result;
 
-}else{
+}
+    elseif($query=="getString"){
+      $result= NULL;
+      $pay_scale= $args['pay_scale'];
+      $employeeID= $args['forEmployee'];
+      $username= $args['username'];
+
+      //get the allowances that are already issued to the employee
+      $arr= $this->getUserData($username);
+      $userID= $arr['id'];
+
+      $data= $this->getUserDetails($userID);
+      $allowancesIssued= $data['allowances'];
+      $allowancesIssuedArray= explode(",", $allowancesIssued);
+
+      $allowancesSQL= join("','", $allowancesIssuedArray);
+
+      $stmt= $link->prepare("SELECT * FROM `allowances` WHERE allowance_code IN ('$allowancesSQL') AND pay_scale= :pay_scale");
+      $stmt->bindParam(":pay_scale", $pay_scale);
+      $stmt->execute();
+
+      if($stmt->rowCount() == 0){
+        $result= "N/A";
+      }else{
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $allowance_name= $row['allowance_name'];
+        $allowance_code= $row['allowance_code'];
+        $pay_scale= $row['pay_scale'];
+        $allowance_percentage= $row['allowance_percentage'];
+        $posted_by= $row['posted_by'];
+
+        
+        $optionValues= "$allowance_code $allowance_name @ $allowance_percentage% <br>";
+        $result .= $optionValues;
+        
+
+    }
+  }
+    return $result;
+
+}elseif($query=="getStringToDelete"){
+  $result= NULL;
+  $pay_scale= $args['pay_scale'];
+  $employeeID= $args['forEmployee'];
+  $username= $args['username'];
+
+  //get the allowances that are already issued to the employee
+  $arr= $this->getUserData($username);
+  $userID= $arr['id'];
+
+  $data= $this->getUserDetails($userID);
+  $allowancesIssued= $data['allowances'];
+  $allowancesIssuedArray= explode(",", $allowancesIssued);
+
+  $allowancesSQL= join("','", $allowancesIssuedArray);
+
+  $stmt= $link->prepare("SELECT * FROM `allowances` WHERE allowance_code IN ('$allowancesSQL') AND pay_scale= :pay_scale");
+  $stmt->bindParam(":pay_scale", $pay_scale);
+  $stmt->execute();
+
+  if($stmt->rowCount() == 0){
+    $result= "N/A";
+  }else{
+
+  while($row= $stmt->fetch()){
+    $id= $row['id'];
+    $allowance_name= $row['allowance_name'];
+    $allowance_code= $row['allowance_code'];
+    $pay_scale= $row['pay_scale'];
+    $allowance_percentage= $row['allowance_percentage'];
+    $posted_by= $row['posted_by'];
+
+    $dataIDArray= json_encode(array($employeeID, $allowance_code, 'allowance'));
+
+    
+    $optionValues= "$allowance_code $allowance_name @ $allowance_percentage% <button data-id='$dataIDArray' class='deleteAllowance ico-delete-payment'><i class='fa fa-trash'></i></button><br>";
+    $result .= $optionValues;
+    
+
+}
+}
+return $result;
+
+}elseif($query=="getCodes"){
+  $result= NULL;
+  $pay_scale= $args['pay_scale'];
+  $employeeID= $args['forEmployee'];
+  $username= $args['username'];
+
+  //get the allowances that are already issued to the employee
+  $arr= $this->getUserData($username);
+  $userID= $arr['id'];
+
+  $data= $this->getUserDetails($userID);
+  $allowancesIssued= $data['allowances'];
+  $allowancesIssuedArray= explode(",", $allowancesIssued);
+
+  $allowancesSQL= join("','", $allowancesIssuedArray);
+
+  $stmt= $link->prepare("SELECT * FROM `allowances` WHERE allowance_code IN ('$allowancesSQL') AND pay_scale= :pay_scale");
+  $stmt->bindParam(":pay_scale", $pay_scale);
+  $stmt->execute();
+
+  if($stmt->rowCount() == 0){
+    $result= "N/A";
+  }else{
+
+    $result= array();
+
+  while($row= $stmt->fetch()){
+    $id= $row['id'];
+    $allowance_code= $row['allowance_code'];
+    
+    $result[]= $allowance_code;
+    
+}
+}
+return $result;
+
+}
+
+
+else{
   header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
             exit();
             return false;
@@ -818,14 +954,139 @@ public function getDeductions($query, $args, $id){
         $posted_by= $row['posted_by'];
 
         
-        $optionValues= "<option>$deduction_code $deduction_name @ $deduction_percentage%</option>";
+        $optionValues= "<option value='$deduction_code'>$deduction_code $deduction_name @ $deduction_percentage%</option>";
         $result .= $optionValues;
         
 
     }
     return $result;
 
-    }  
+    }elseif($query=="getString"){
+      $result= NULL;
+      $pay_scale= $args['pay_scale'];
+      $employeeID= $args['forEmployee'];
+      $username= $args['username'];
+
+      //get the deductions that are already issued to the employee
+      $arr= $this->getUserData($username);
+      $userID= $arr['id'];
+
+      $data= $this->getUserDetails($userID);
+      $deductionsIssued= $data['deductions'];
+      $deductionsIssuedArray= explode(",", $deductionsIssued);
+
+      $deductionsSQL= join("','", $deductionsIssuedArray);
+
+      $stmt= $link->prepare("SELECT * FROM `deductions` WHERE deduction_code IN ('$deductionsSQL') AND pay_scale= :pay_scale");
+      $stmt->bindParam(":pay_scale", $pay_scale);
+      $stmt->execute();
+
+      if($stmt->rowCount() == 0){
+        $result= "N/A";
+      }else{
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $deduction_name= $row['deduction_name'];
+        $deduction_code= $row['deduction_code'];
+        $deduction_type= $row['deduction_type'];
+        $pay_scale= $row['pay_scale'];
+        $deduction_percentage= $row['deduction_percentage'];
+        $posted_by= $row['posted_by'];
+
+        
+        $optionValues= "$deduction_code $deduction_name @ $deduction_percentage% </br>";
+        $result .= $optionValues;
+        
+
+    }
+  }
+    return $result;
+
+    }elseif($query=="getStringToDelete"){
+      $result= NULL;
+      $pay_scale= $args['pay_scale'];
+      $employeeID= $args['forEmployee'];
+      $username= $args['username'];
+
+      //get the deductions that are already issued to the employee
+      $arr= $this->getUserData($username);
+      $userID= $arr['id'];
+
+      $data= $this->getUserDetails($userID);
+      $deductionsIssued= $data['deductions'];
+      $deductionsIssuedArray= explode(",", $deductionsIssued);
+
+      $deductionsSQL= join("','", $deductionsIssuedArray);
+
+      $stmt= $link->prepare("SELECT * FROM `deductions` WHERE deduction_code IN ('$deductionsSQL') AND pay_scale= :pay_scale");
+      $stmt->bindParam(":pay_scale", $pay_scale);
+      $stmt->execute();
+
+      if($stmt->rowCount() == 0){
+        $result= "N/A";
+      }else{
+    
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $deduction_name= $row['deduction_name'];
+        $deduction_code= $row['deduction_code'];
+        $deduction_type= $row['deduction_type'];
+        $pay_scale= $row['pay_scale'];
+        $deduction_percentage= $row['deduction_percentage'];
+        $posted_by= $row['posted_by'];
+
+        $dataIDArray= json_encode(array($employeeID, $deduction_code, 'deduction'));
+        
+        $optionValues= "$deduction_code $deduction_name @ $deduction_percentage% <button data-id='$dataIDArray' class='deleteAllowance ico-delete-payment'><i class='fa fa-trash'></i></button></br>";
+        $result .= $optionValues;
+        
+    
+    }
+    }
+    return $result;
+    
+    }elseif($query=="getCodes"){
+      $result= NULL;
+      $pay_scale= $args['pay_scale'];
+      $employeeID= $args['forEmployee'];
+      $username= $args['username'];
+
+      //get the deductions that are already issued to the employee
+      $arr= $this->getUserData($username);
+      $userID= $arr['id'];
+
+      $data= $this->getUserDetails($userID);
+      $deductionsIssued= $data['deductions'];
+      $deductionsIssuedArray= explode(",", $deductionsIssued);
+
+      $deductionsSQL= join("','", $deductionsIssuedArray);
+
+      $stmt= $link->prepare("SELECT * FROM `deductions` WHERE deduction_code IN ('$deductionsSQL') AND pay_scale= :pay_scale");
+      $stmt->bindParam(":pay_scale", $pay_scale);
+      $stmt->execute();
+
+      if($stmt->rowCount() == 0){
+        $result= "N/A";
+      }else{
+      
+        $result= array();
+
+      while($row= $stmt->fetch()){
+        $id= $row['id'];
+        $deduction_code= $row['deduction_code'];
+
+        $result[]= $deduction_code;
+        
+    
+    }
+    }
+    return $result;
+    
+    }
+
+
+
 
 }else{
   header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
@@ -863,7 +1124,7 @@ public function getEmployeesForPaymentSettings($id){
     <td>$pay_scale</td>
     <td>$deduction_percentage%</td>
     <input type='hidden' value='$id' name='id'>
-    <td><input type='submit' name='deleteDeduction' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?' value='Delete'></td>
+    <td><input type='submit' name='deleteDeduction' class='btn btn-danger' data-toggle='tooltip' data-placement='top' title='Are you sure?'><i class='fa fa-'></i></td>
     </form>
     </tr>";
   }
@@ -874,6 +1135,26 @@ public function getEmployeesForPaymentSettings($id){
 }
 
 }
+
+
+
+//this function generates the payment reference number (transaction #)
+public function generatePaymentReferenceNo(){
+
+  $year= date("y");
+  $month= date("m");
+  $day= date("d");
+  $time= substr(time(), 7, 7);
+
+  $prefix= "EISDP";
+  $salt= rand(100, 999);
+
+  $payment_ref_no= $prefix . $time . $month . $day . $salt;
+
+  return $payment_ref_no;
+
+  }
+
 
 
   

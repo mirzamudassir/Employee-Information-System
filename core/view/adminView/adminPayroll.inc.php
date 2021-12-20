@@ -57,7 +57,7 @@ $userObject= new UserController();
                         <!-- user image section-->
                         <div class="user-section">
                             <div class="user-section-inner">
-                                <img src="../assets/img/user.jpg" alt="">
+                            <img src="<?php echo $arr['profile_picture']; ?>" alt="Profile Picture" height='50px' width='60px'>
                             </div>
                             <div class="user-info">
                                 <div><h4><?php $arr= $userObject->getUserData($_SESSION['username']); 
@@ -99,7 +99,7 @@ $userObject= new UserController();
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#bulkPayments">Bulk Payments <i class="fa fa-list fa-dollar-sign"></i></button>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageAllowances">Manage Allowances <i class="fa fa-list fa-hand-holding-usd"></i></button>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDeductions">Manage Deductions <i class="fa fa-list fa-percentage"></i></button>
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#paymentSettings">Payment Settings <i class="fa fa-cogs fa-fw"></i></button>
+                    <a href="paymentSettings" class="page"><button type="button" class="btn btn-primary button-left-50">Payment Settings <i class="fa fa-cogs fa-fw"></i></button></a>
                     
 
 
@@ -155,6 +155,35 @@ $("#search").submit(function(event){
 });
 
 });
+
+
+//redirect user to payment settings page
+$(document).ready(function(){    
+ $("body").on("click", ".editPaymentSettings", function(event){ 
+
+  
+  var employeeID = $(this).data('id');
+
+ $.ajax({
+        url: 'paymentSettings',
+        type: 'post',
+        data: {args: employeeID},
+        success: function(response){
+            sessionStorage.setItem("employeeID", employeeID);
+            window.location.replace('paymentSettings');
+
+        }
+     });
+
+
+
+});
+
+
+});  
+
+
+
 
 window.onload= function(){
     document.getElementById("employeeID").value= "EIS-";

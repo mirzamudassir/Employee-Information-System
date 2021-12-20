@@ -94,6 +94,7 @@ class Employee{
           $designation= $row2['designation'];
           $pay_scale= $row2['pay_scale'];
           $allowances= $row2['allowances'];
+          $deductions= $row2['deductions'];
           $profile_picture= $row2['profile_picture'];
           $registered_by= $row2['registered_by'];
           $registered_at= $row2['registered_at'];
@@ -103,7 +104,7 @@ class Employee{
 
       $result= array("id"=>"$id", "username"=>"$username", "employeeID" => "$employeeID", "full_name"=>"$full_name", 
       "education" => "$education", "department" => "$department", "designation"=> "$designation", "pay_scale" => "$pay_scale", 
-       "allowances" => "$allowances", "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
+       "allowances" => "$allowances", "deductions"=> $deductions, "profile_picture" => "$profile_picture","registered_by" => "$registered_by" ,
       "registered_at" => "$registered_at", "last_edit_by" => "$last_edit_by", "last_edit_at" => "$last_edit_at","contact_no"=>"$contact",
       "email" => "$email", "access_level" => "$access_level", "account_status" => "$account_status");
       }

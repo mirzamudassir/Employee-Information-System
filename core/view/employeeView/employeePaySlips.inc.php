@@ -1,6 +1,5 @@
 <?php 
-require_once 'adminHeader.inc.php';
-$userObject= new UserController();
+require_once 'employeeHeader.inc.php';
 $employeeObject= new EmployeeController();
 ?>
 
@@ -30,15 +29,7 @@ $employeeObject= new EmployeeController();
                         <i class="fa fa-user fa-3x"></i>
                     </a>
                    <!-- dropdown user--> 
-                   <ul class="dropdown-menu dropdown-user">
-                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#userProfile"><i class="fa fa-user fa-fw"></i>Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="javascript:void(0)" onclick="location.href='../core/modal/Auth/logout'"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
-                        </li>
-                    </ul>
+                   <?php echo $dropDownMenu; ?>
                     <!-- end dropdown-user -->
                 </li>
                 <!-- end main dropdown -->
@@ -95,33 +86,30 @@ $employeeObject= new EmployeeController();
             <div class="row">
                 <!-- Page Header -->
                 <div class="col-lg-12">
-                    <h1 class="page-header">Leave Manager</h1>
+                    <h1 class="page-header">Pay Slips</h1>
                     <?php $userObject->getNotification(); ?>
-                    <button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#leaveSettings'>Settings <i class="fa fa-cogs fa-fw"></i></button>
-                    <button class="btn btn-primary button-left-50" id="printAttendanceTable" onclick='printLeaveRequests()'>Print <i class="fa fa-print fa-fw"></i></button>
+                    
                                     <!-- Advanced Tables -->
                                     <div class="panel panel-default">
                         <div class="panel-heading">
-                             Leave Requests
+                             Pay Slips Record
                         </div>
                         
-                        <div class="panel-body" id="printTable">
+                        <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
+                                            <th>Ref #</th>
                                             <th>Emp #</th>
-                                            <th>Req. #</th>
                                             <th>Name</th>
-                                            <th>Total Leaves</th>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Type</th>
+                                            <th>Paid Amount</th>
+                                            <th>Date</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $userObject->getLeavesRecordForAdmin(); ?>
+                                        <?php $employeeObject->getPaySlipsRecordForEmployee($_SESSION['username']); ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -130,13 +118,13 @@ $employeeObject= new EmployeeController();
                     </div>
                     <!--End Advanced Tables -->
 
-                    <!-- View Leave Request Modal Alert Start -->
-<div class="modal fade" id="leaveRequestDetails" tabindex="-1" role="dialog" aria-labelledby="leaveRequestDetails" aria-hidden="true">
-                                <div class="modal-dialog" style="width:70%">
+<!-- Update User Record Modal Alert Start -->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
+                                <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> Leave Request Details</h4>
+                                            <h4 class="modal-title" id="myModalLabel"> Update User Record</h4>
                                         </div>
                                         <div class="modal-body">
                                         
@@ -147,7 +135,26 @@ $employeeObject= new EmployeeController();
                                     </div>
                                 </div>
                             </div>
-                        <!-- View Leave Request Modal Alrt End -->
+                        <!-- Update User Record Modal Alrt End -->
+    
+<!-- View User Record Modal Alert Start -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
+                                <div class="modal-dialog" style="width:60%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> View User Record</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        
+                                       
+                                        
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- View User Record Modal Alrt End -->
                        
                 </div>
                 <!--End Page Header -->
@@ -159,44 +166,36 @@ $employeeObject= new EmployeeController();
     </div>
     <!-- end wrapper -->
 
-    <?php require_once 'adminFooter.inc.php' ?>
-
-
-
+    <?php require_once 'employeeFooter.inc.php' ?>
+    
     <script>
    $(document).ready(function(){    
- $("body").on("click", ".leaveRequestDetails", function(event){ 
+ $("body").on("click", ".paySlipDetails", function(event){ 
 
   
-  var requestID = $(this).data('id');
+  var paymentRefNo = $(this).data('id');
 
   // AJAX request
   $.ajax({
-   url: '../core/view/ajaxLeaveRequestDetails',
+   url: '../core/view/ajaxPaySlip',
    type: 'post',
-   data: {requestID: requestID},
+   data: {paymentRefNo: paymentRefNo},
    success: function(response){ 
-     // Add response in Modal body
-     $('.modal-body').html(response);
-
-     // Display Modal
-     $('#leaveRequestDetails').modal('show');  
+    var w = window.open('_blank', 'Pay Slip', 'width=800, height= 800, scrollbars=yes');
+    w.document.open();
+    w.document.write(response);
+    w.document.close();
      
    }
 
 });
-$("body").on("click", "#close", function(event){ 
 
-$('#leaveRequestDetails').modal('hide');
-location.reload();
-});
 });
 
 
 });    
 
 </script>
-
 
 </body>
 

@@ -1,7 +1,6 @@
 <?php 
 require_once 'adminHeader.inc.php';
 $userObject= new UserController();
-$employeeObject= new EmployeeController();
 ?>
 
 <body>
@@ -95,60 +94,29 @@ $employeeObject= new EmployeeController();
             <div class="row">
                 <!-- Page Header -->
                 <div class="col-lg-12">
-                    <h1 class="page-header">Leave Manager</h1>
+                    <h1 class="page-header">Payment Settings</h1>
                     <?php $userObject->getNotification(); ?>
-                    <button type='button' class='btn btn-primary button-left-50' data-toggle='modal' data-target='#leaveSettings'>Settings <i class="fa fa-cogs fa-fw"></i></button>
-                    <button class="btn btn-primary button-left-50" id="printAttendanceTable" onclick='printLeaveRequests()'>Print <i class="fa fa-print fa-fw"></i></button>
-                                    <!-- Advanced Tables -->
-                                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                             Leave Requests
-                        </div>
-                        
-                        <div class="panel-body" id="printTable">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Emp #</th>
-                                            <th>Req. #</th>
-                                            <th>Name</th>
-                                            <th>Total Leaves</th>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Type</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $userObject->getLeavesRecordForAdmin(); ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <!--End Advanced Tables -->
+                   
+                   <table class="payroll-table">
+                    <tr class="payroll-table-tr">
 
-                    <!-- View Leave Request Modal Alert Start -->
-<div class="modal fade" id="leaveRequestDetails" tabindex="-1" role="dialog" aria-labelledby="leaveRequestDetails" aria-hidden="true">
-                                <div class="modal-dialog" style="width:70%">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> Leave Request Details</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        
-                                       
-                                        
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        <!-- View Leave Request Modal Alrt End -->
-                       
+                            <td class='payroll-table-td'>
+                        <form action='' method='POST' id='searchPaymentSettings' name='searchPaymentSettings'>
+                        <input type='varchar' name='employeeIDForPaymentSettings' id='employeeID' class='form-control to-left-50' autocomplete='off' required>
+                        <input type='submit' name='employeeIDForPaymentSettings' class='btn btn-success button-right-50' data-id='' value='Search'>
+                        </form>
+                        </td>
+                            
+                    </tr>
+
+                    <tr>
+                        <td class="payroll-table-td">
+                        <div id="paymentSettingsResult">Enter the Employee ID to change payment settings.</div>
+                        </td>
+                    </tr>
+
+                   </table>
+                   
                 </div>
                 <!--End Page Header -->
             </div>        
@@ -161,43 +129,93 @@ $employeeObject= new EmployeeController();
 
     <?php require_once 'adminFooter.inc.php' ?>
 
+<script>
+    $(document).ready(function(){
+
+$("#searchPaymentSettings").submit(function(event){
+    event.preventDefault();
+     $.ajax({
+        url: '../core/view/ajaxFetchDataForPaymentSettings',
+        type: 'post',
+        data: $('form').serialize(),
+        success: function(response){
+
+            // Add response in Modal body
+            $('#paymentSettingsResult').html(response);
+
+        }
+     });
+
+});
+
+});
 
 
-    <script>
-   $(document).ready(function(){    
- $("body").on("click", ".leaveRequestDetails", function(event){ 
+//delete Allowances and Deductions
+$(document).ready(function(){    
+ $("body").on("click", ".deleteAllowance", function(event){ 
 
   
-  var requestID = $(this).data('id');
+  var json = $(this).data('id');
+  var data= [];
+  for(var i in json)
+    data.push([i, json[i]]);
+ 
 
-  // AJAX request
-  $.ajax({
-   url: '../core/view/ajaxLeaveRequestDetails',
-   type: 'post',
-   data: {requestID: requestID},
-   success: function(response){ 
-     // Add response in Modal body
-     $('.modal-body').html(response);
+ var employeeID= data[0];
+ var allowance= data[1];
+ var query= data[2]
 
-     // Display Modal
-     $('#leaveRequestDetails').modal('show');  
-     
-   }
+ $.ajax({
+        url: '../core/view/ajaxManagePaymentSettings',
+        type: 'post',
+        data: {employeeID: employeeID, allowance: allowance, query: query},
+        success: function(response){
 
-});
-$("body").on("click", "#close", function(event){ 
+            //reload the current view
+            $.ajax({
+        url: '../core/view/ajaxFetchDataForPaymentSettings',
+        type: 'post',
+        data: $('form').serialize(),
+        success: function(response){
 
-$('#leaveRequestDetails').modal('hide');
-location.reload();
-});
+            // Add response in Modal body
+            $('#paymentSettingsResult').html(response);
+
+        }
+     });
+
+
+
+        }
+     });
+
+
+
 });
 
 
 });    
 
-</script>
+window.onload= function(){
+    var employeeID= sessionStorage.getItem("employeeID");
+    if(employeeID){
+        document.getElementById("employeeID").value= employeeID;
+        $(document).ready(function(){
+                $("#searchPaymentSettings").submit();
+            });
+        sessionStorage.removeItem("employeeID");
+    }else{
+    document.getElementById("employeeID").value= "EIS-";
+    }
+}
 
-
+function goBack() {
+    window.history.back(-1);
+}
+                        
+                        </script>
+    
 </body>
 
 </html>

@@ -306,11 +306,11 @@ $userObject= new UserController();
                     }
 
 
-                    function markAttendanceOut($employeeID, $punch_out_timestamp){
+                    function markAttendanceOut($employeeID, $punch_out_timestamp, $punch_in_timestamp){
                         global $link;
 
                         $stmt= $link->prepare("UPDATE `attendance_sheet` SET punch_out_timestamp= :punch_out_timestamp
-                         WHERE employeeID= :employeeID");
+                         WHERE employeeID= :employeeID AND punch_in_timestamp LIKE '%$punch_in_timestamp%'");
 
                         $stmt->bindParam(":punch_out_timestamp", $punch_out_timestamp);
                         $stmt->bindParam(":employeeID", $employeeID);
@@ -480,6 +480,12 @@ $userObject= new UserController();
                 global $link;
                 $posted_by= $_SESSION['username'];
                 $posted_timestamp= date("F j, Y, g:i a");
+
+                if($allowance_code == '0001' OR $allowance_code == '0002'){
+                    $arr= array("Error", "Allowance Code is Reserved.");
+                    $_SESSION['notifStatus']= $arr;
+                    redirect_to("../../public/payroll");
+                }else{
                 
                 $query= $link->prepare("INSERT INTO `allowances` (allowance_code, pay_scale, allowance_name, allowance_percentage, posted_by, posted_timestamp) 
                 VALUES (:allowance_code, :pay_scale, :allowance_name, :allowance_percentage, :posted_by, :posted_timestamp)");
@@ -501,6 +507,7 @@ $userObject= new UserController();
                 }
                 //dispose the db connection
                 $link= NULL;
+            }
                 }
 
 
@@ -533,6 +540,12 @@ $userObject= new UserController();
                     global $link;
                     $posted_by= $_SESSION['username'];
                     $posted_timestamp= date("F j, Y, g:i a");
+
+                    if($deduction_code == '0001' OR $deduction_code == '0002'){
+                        $arr= array("Error", "Deduction Code is Reserved.");
+                        $_SESSION['notifStatus']= $arr;
+                        redirect_to("../../public/payroll");
+                    }else{
                     
                     $query= $link->prepare("INSERT INTO `deductions` (deduction_code, deduction_name, deduction_type, deduction_percentage, pay_scale, posted_by, posted_timestamp) 
                     VALUES (:deduction_code, :deduction_name, :deduction_type, :deduction_percentage, :pay_scale, :posted_by, :posted_timestamp)");
@@ -555,6 +568,7 @@ $userObject= new UserController();
                     }
                     //dispose the db connection
                     $link= NULL;
+                }
                     }
     
     
@@ -579,6 +593,95 @@ $userObject= new UserController();
                         //dispose the db connection
                         $link= NULL;
                     }
+
+
+
+                    function updatePaymentSettings($employeeID, $allowances, $deductions){
+                        global $link;
+
+                        $stmt= $link->prepare("SELECT allowances FROM `employees` WHERE employeeID= :employeeID");
+                        $stmt->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+                        $stmt->execute();
+                        while($row = $stmt->fetch()){
+                            $issuedAllowances= $row['allowances'];
+                        }
+
+                        $stmt2= $link->prepare("SELECT deductions FROM `employees` WHERE employeeID= :employeeID");
+                        $stmt2->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+                        $stmt2->execute();
+                        while($row2 = $stmt2->fetch()){
+                            $issuedDeductions= $row2['deductions'];
+                        }
+
+                            $query= $link->prepare("UPDATE `employees` SET allowances = 
+                                                    CASE 
+                                                    WHEN allowances IS NULL THEN '$allowances'
+                                                    WHEN allowances IS NOT NULL THEN CONCAT(allowances, ',', '$allowances')
+                                                    END 
+                                                    WHERE employeeID= :employeeID");
+                            $query->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+                    
+                            
+                            if($query->execute()){
+                                $stmt3= $link->prepare("UPDATE `employees` SET deductions = 
+                                                    CASE 
+                                                    WHEN deductions IS NULL THEN '$deductions'
+                                                    WHEN deductions IS NOT NULL THEN CONCAT(deductions, ',', '$deductions')
+                                                    END 
+                                                    WHERE employeeID= :employeeID");
+                            $stmt3->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
+                            if($stmt3->execute()){
+                                    $arr= array("Settings Saved");
+                                   $_SESSION['notifStatus']= $arr;
+                                   redirect_to("../../public/payroll");
+
+                            }
+
+                            }
+                        
+                        //dispose the db connection
+                        $link= NULL;
+                        }
+
+
+
+                        function makePayment($paid_to, $paid_amount, $paid_allowances, $paid_allowances_amount, $paid_deductions, $paid_deductions_amount){
+                            global $link;
+                            global $userObject;
+
+                            $payment_made_by= $_SESSION['username'];
+                            $payment_timestamp= date("F j, Y, g:i a");
+
+                            //generate payment reference no
+                            $payment_reference_no= $userObject->generatePaymentReferenceNo();
+                            
+                            $query= $link->prepare("INSERT INTO `payments` (payment_reference_no, paid_to, paid_amount, paid_allowances, 
+                                                    paid_allowances_amount, paid_deductions, paid_deductions_amount, payment_made_by, payment_timestamp) 
+                            VALUES (:payment_reference_no, :paid_to, :paid_amount, :paid_allowances, :paid_allowances_amount, :paid_deductions, 
+                            :paid_deductions_amount, :payment_made_by, :payment_timestamp)");
+
+                            $query->bindParam(":payment_reference_no", $payment_reference_no, PDO::PARAM_STR);
+                            $query->bindParam(":paid_to", $paid_to, PDO::PARAM_STR);
+                            $query->bindParam(":paid_amount", $paid_amount, PDO::PARAM_STR);
+                            $query->bindParam(":paid_allowances", $paid_allowances, PDO::PARAM_STR);
+                            $query->bindParam(":paid_allowances_amount", $paid_allowances_amount, PDO::PARAM_STR);
+                            $query->bindParam(":paid_deductions", $paid_deductions, PDO::PARAM_STR);
+                            $query->bindParam(":paid_deductions_amount", $paid_deductions_amount, PDO::PARAM_STR);
+                            $query->bindParam(":payment_made_by", $payment_made_by, PDO::PARAM_STR);
+                            $query->bindParam(":payment_timestamp", $payment_timestamp, PDO::PARAM_STR);
+                    
+                            if($query->execute()){
+                                $_SESSION['notifStatus']= "Payment Successful";
+                                redirect_to("../../public/payroll");
+                            }
+                            
+                            else{
+                                $_SESSION['notifStatus']= "Payment Error";
+                                redirect_to("../../public/payroll");
+                            }
+                            //dispose the db connection
+                            $link= NULL;
+                            }
                        
 
 

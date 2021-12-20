@@ -86,17 +86,47 @@ require_once 'employeeHeader.inc.php';
                 <!-- Page Header -->
                 <div class="col-lg-12">
                     <h1 class="page-header">Dashboard</h1>
-                    <?php getNotification(); ?>
+                    <?php $userObject->getNotification(); ?>
                     
-                                    <!-- Advanced Tables -->
-                                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                             Items
+                    <div class="col-lg-4">
+                    <div class="panel panel-primary text-center no-boder">
+                        <div class="panel-body blue">
+                            <i class="fa fa-plane fa-fw fa-3x"></i>
+                            
                         </div>
-                        
-                       Dashboard
+                        <div class="panel-footer">
+                            <span class="panel-eyecandy-title">Total Leaves this Month
+                            </span>
+                        </div>
                     </div>
-                    <!--End Advanced Tables -->
+                    </div>
+
+                    <div class="col-lg-4">
+                    <div class="panel panel-primary text-center no-boder">
+                        <div class="panel-body blue">
+                            <i class="fa fa-stamp fa-fw fa-3x"></i>
+                            
+                        </div>
+                        <div class="panel-footer">
+                            <span class="panel-eyecandy-title">Pending Leave Requests
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                    <div class="panel panel-primary text-center no-boder">
+                        <div class="panel-body blue">
+                            <i class="fa fa-pencil-square-o fa-3x"></i>
+                            
+                        </div>
+                        <div class="panel-footer">
+                            <span class="panel-eyecandy-title">Pending for Price List
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
                 </div>
                 <!--End Page Header -->
             </div>        

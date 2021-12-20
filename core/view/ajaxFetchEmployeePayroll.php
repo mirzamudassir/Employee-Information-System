@@ -12,6 +12,9 @@ if(isset($_POST['employeeID'])){
       if($stmt->rowCount() == 0){
          echo "No data found.";
       }else{
+      
+      //to be used to call methods
+      $userObject= new UserController();
     
       while($row= $stmt->fetch()){
       
@@ -81,17 +84,62 @@ if(isset($_POST['employeeID'])){
             return $sum;
       }
 
+      //getting neccessary details of employee
+      $stmt2= $link->prepare("SELECT allowed_leaves, paid_leave_charges FROM `designations` WHERE designation_name= :designation");
+      $stmt2->bindParam(":designation", $designation, PDO::PARAM_STR);
+      $stmt2->execute();
+      while($row2= $stmt2->fetch()){
+         $allowed_leaves= $row2['allowed_leaves'];
+         if(is_numeric($paid_leave_charges = $row2['paid_leave_charges'])){
+            $paid_leave_charges = $row2['paid_leave_charges'] . " PKR";
+         }else{
+            $paid_leave_charges= "N/A";
+         }
+      }
+
+      //get the leaves of current month
+      $leaves_this_month= $userObject->getLeavesOfMonth($employeeID, date("F d, Y")) - $allowed_leaves;
+      if($leaves_this_month < 0){
+         $leaves_this_month= 0;
+      }
+
+      //get the allowances and deductions of employee
+      $allowancesList= $userObject->getAllowances("getString", array("pay_scale"=>$pay_scale, 'forEmployee'=>$employeeID, 'username'=>$username), $_SESSION['id']);
+      $deductionsList= $userObject->getDeductions("getString", array("pay_scale"=>$pay_scale, 'forEmployee'=>$employeeID, 'username'=>$username), $_SESSION['id']);
+
+      $leaves_charges= $leaves_this_month * substr($paid_leave_charges, 0, -4);
+
+
       $sumOfAllowances= ($basic_salary / 100) * getSumOfAllowances($allowances, $pay_scale, $link) . ".00";
       $gross_pay= $basic_salary + $sumOfAllowances . ".00";
 
-      $sumOfDeductions= ($basic_salary / 100) * getSumOfDeductions($deductions, $pay_scale, $link) . ".00";
+      $sumOfDeductions= ($basic_salary / 100) * getSumOfDeductions($deductions, $pay_scale, $link) + $leaves_charges . ".00";
       $net_pay= $gross_pay - $sumOfDeductions . ".00";
+
+      if($net_pay > 1 AND $account_status === 'ACTIVE'){
+         $payNowButton= "<input type='submit' name='makePayment' class='btn btn-success btn-right-50' style='margin-top: 4%; margin-left: 20%; width: 30%;' data-id='' value='Pay Now'>";
+      }else{
+         if($account_status != 'ACTIVE'){
+            $payNowButton= "
+         <label class='alert'>Payment Error : Account is $account_status. Payment cannot proceed.</label>";
+         }else{
+         $payNowButton= "
+         <label class='alert'>Payment Error : Account is in Debt. Payment cannot proceed.</label>";
+         }
+      }
+
+      //get the allowances and deductions of employee to generate allowances and deductions codes array
+      $paid_allowances_array= $userObject->getAllowances("getCodes", array("pay_scale"=>$pay_scale, 'forEmployee'=>$employeeID, 'username'=>$username), $_SESSION['id']);
+      $paid_deductions_array= $userObject->getDeductions("getCodes", array("pay_scale"=>$pay_scale, 'forEmployee'=>$employeeID, 'username'=>$username), $_SESSION['id']);
       
-   
+      $paid_allowances= htmlspecialchars(serialize($paid_allowances_array));
+      $paid_deductions= htmlspecialchars(serialize($paid_deductions_array));
+
+
          echo "
 
          
-         <table style='width:75%; font-size: 1em; display:inline-block; box-shadow: 5px 10px #888888;'>
+         <table style='width:75%; font-size: 1em; display:inline-block; box-shadow: 5px 10px;'>
          <th style='line-height: 2em; padding-bottom: 3%;'>
          <u style='font-weight: bold; text-align: center;'>Employee Details</u>
          </th>
@@ -126,49 +174,37 @@ if(isset($_POST['employeeID'])){
          </table>
 
 
-         <table style='width:60%; padding-top: 10%; font-size: 1em; display:inline-block;'>
+         <table style='width:65%; padding-top: 5%; font-size: 1em; display:inline-block;'>
          <th style='line-height: 2em; padding-bottom: 3%;'>
          <u style='font-weight: bold; text-align: center;'>Accounts Information</u>
          </th>
          
          <tr style='line-height: 2em;'>
          <td><b>Pay Scale :</b> $pay_scale</td>
-         <td><b>Basic Salary (Rs):</b> $basic_salary</td>
+         <td><b>Basic Salary :</b> $basic_salary PKR</td>
          </tr>
          
          <tr style='line-height: 2em;'>
-         <td><b>Allowances:</b> $allowances</td>
-         </tr>
-         
-         <tr style='line-height: 2em;'>
-         <td><b>Deductions:</b> $deductions</td>
+         <td><b>Leaves:</b> $leaves_this_month</td>
+         <td><b>Paid Leave :</b> $paid_leave_charges</td>
          </tr>
          
          </table>
 
 
-         <table style='width:60%; padding-top: 10%; font-size: 1em; display:inline-block;'>
+         <table style='width:60%; padding-top: 5%; font-size: 1em; display:inline-block;'>
          <th style='line-height: 2em; padding-bottom: 3%;'>
-         <u style='font-weight: bold; text-align: center;'>Allowances</u>
+         <u style='font-weight: bold; text-align: center;'>Allowances</u> <button data-id='$employeeID' class='editPaymentSettings ico-edit-payment'><i class='fa fa-cogs'></i></button></i>
          </th>
          
          <tr style='line-height: 2em;'>
-         <td><b>Pay Scale :</b> $pay_scale</td>
-         <td><b>Basic Salary (Rs):</b> $basic_salary</td>
-         </tr>
-         
-         <tr style='line-height: 2em;'>
-         <td><b>Allowances:</b> $allowances</td>
-         </tr>
-         
-         <tr style='line-height: 2em;'>
-         <td><b>Deductions:</b> $deductions</td>
+         <td> $allowancesList</td>
          </tr>
          
          </table>
 
 
-         <table style='float: right; margin-top: 10%; width:35%; font-size: 1em; display:inline-block; box-shadow: 5px 10px #888888;'>
+         <table style='float: right; margin-top: 10%; width:35%; font-size: 1em; display:inline-block; box-shadow: 5px 10px;'>
          <th style='line-height: 2em; padding-bottom: 3%;'>
          <u style='font-weight: bold; text-align: center;'>Payment Details</u>
          </th>
@@ -197,28 +233,29 @@ if(isset($_POST['employeeID'])){
 
 
 
-         <table style='width:60%; padding-top: 10%; font-size: 1em; display:inline-block;'>
+         <table style='width:60%; padding-top: 5%; font-size: 1em; display:inline-block;'>
          <th style='line-height: 2em; padding-bottom: 3%;'>
-         <u style='font-weight: bold; text-align: center;'>Deductions</u>
+         <u style='font-weight: bold; text-align: center;'>Deductions</u> <button data-id='$employeeID' class='editPaymentSettings ico-edit-payment'><i class='fa fa-cogs'></i></button>
          </th>
-         
+
          <tr style='line-height: 2em;'>
-         <td><b>Pay Scale :</b> $pay_scale</td>
-         <td><b>Basic Salary (Rs):</b> $basic_salary</td>
+         <td>$deductionsList</td>
          </tr>
          
          <tr style='line-height: 2em;'>
-         <td><b>Allowances:</b> $allowances</td>
-         </tr>
-         
-         <tr style='line-height: 2em;'>
-         <td><b>Deductions:</b> $deductions</td>
+         <td>Leaves Charges : -$leaves_charges PKR</td>
          </tr>
          
          </table>
 
-         <form action='' method='POST'>
-         <input type='submit' name='search' class='btn btn-success btn-right-50' style='margin-top: 4%; margin-left: 30%' data-id='' value='Pay Now'>
+         <form action='../core/view/dataParser?f=makePayment' method='POST'>
+         <input type='hidden' name='paid_to' value='$employeeID'>
+         <input type='hidden' name='paid_amount' value='$net_pay'>
+         <input type='hidden' name='paid_allowances' value='$paid_allowances'>
+         <input type='hidden' name='paid_allowances_amount' value='$sumOfAllowances'>
+         <input type='hidden' name='paid_deductions' value='$paid_deductions'>
+         <input type='hidden' name='paid_deductions_amount' value='$sumOfDeductions'>
+         $payNowButton
          </form>
          
          ";

@@ -123,7 +123,7 @@ $userDetails= $employeeControllerObject->getUserDetails($_SESSION['id']);
 
                                         <div class="form-group to-left-70">
                                             <label>Punch In Timestamp <span class="title-red">*</span></label>
-                                            <input class="form-control" name="last_timestamp" value='<?php echo $employeeControllerObject->getAttendanceStatus('details', $userDetails['employeeID'], date("F j, Y")) ?>' type="varchar" disabled>
+                                            <input class="form-control" name="punch_in_timestamp" value='<?php echo $employeeControllerObject->getAttendanceStatus('details', $userDetails['employeeID'], date("F j, Y")) ?>' type="varchar" readonly>
                                         </div>
                             
                                         <div class="form-group to-left-70">
