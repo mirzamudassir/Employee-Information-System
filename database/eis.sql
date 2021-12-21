@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2021 at 11:44 PM
+-- Generation Time: Dec 21, 2021 at 08:25 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -47,7 +47,8 @@ INSERT INTO `allowances` (`id`, `allowance_code`, `pay_scale`, `allowance_name`,
 (5, '0021', 'BPS 05', 'House Rent', '12', 'admin', 'December 10, 2021, 9:57 pm'),
 (6, '0031', 'BPS 06', 'Medical Allowance', '22', 'admin', 'December 12, 2021, 1:40 am'),
 (7, '0021', 'BPS 06', 'House Rent', '12', 'admin', 'December 18, 2021, 6:56 pm'),
-(8, '0041', 'BPS 06', 'Convey Allowance', '20', 'admin', 'December 18, 2021, 6:59 pm');
+(8, '0041', 'BPS 06', 'Convey Allowance', '20', 'admin', 'December 18, 2021, 6:59 pm'),
+(9, '0041', 'BPS 05', 'Convey Allowance', '20', 'admin', 'December 22, 2021, 12:17 am');
 
 -- --------------------------------------------------------
 
@@ -70,8 +71,7 @@ INSERT INTO `attendance_sheet` (`id`, `employeeID`, `punch_in_timestamp`, `punch
 (14, 'EIS-001', 'November 25, 2021, 1:04 pm', 'December 21, 2021, 3:37 am'),
 (16, 'EIS-001', 'November 26, 2021, 11:12 pm', 'December 21, 2021, 3:37 am'),
 (17, 'EIS-001', 'November 27, 2021, 12:39 am', 'December 21, 2021, 3:37 am'),
-(18, 'EIS-005', 'November 27, 2021, 12:43 am', 'November 27, 2021, 12:43 am'),
-(19, 'EIS-004', 'November 27, 2021, 6:40 pm', 'November 27, 2021, 6:49 pm'),
+(19, 'EIS-002', 'November 27, 2021, 6:40 pm', 'November 27, 2021, 6:49 pm'),
 (20, 'EIS-004', 'November 26, 2021, 11:12 pm', 'November 27, 2021, 12:43 am'),
 (21, 'EIS-001', 'November 30, 2021, 11:31 am', 'December 21, 2021, 3:37 am'),
 (22, 'EIS-002', 'November 30, 2021, 11:32 am', 'November 30, 2021, 11:35 am'),
@@ -80,7 +80,6 @@ INSERT INTO `attendance_sheet` (`id`, `employeeID`, `punch_in_timestamp`, `punch
 (26, 'EIS-001', 'December 5, 2021, 5:35 pm', 'December 5, 2021, 5:39 pm'),
 (27, 'EIS-002', 'December 5, 2021, 5:36 pm', 'December 5, 2021, 5:39 pm'),
 (28, 'EIS-001', 'December 12, 2021, 12:05 am', 'December 21, 2021, 3:37 am'),
-(29, 'EIS-003', 'December 21, 2021, 12:10 am', 'December 21, 2021, 3:42 am'),
 (32, 'EIS-002', 'December 21, 2021, 3:36 am', 'December 21, 2021, 3:41 am'),
 (33, 'EIS-001', 'December 21, 2021, 3:39 am', 'December 21, 2021, 3:40 am');
 
@@ -189,9 +188,8 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `username`, `employeeID`, `full_name`, `education`, `department`, `designation`, `pay_scale`, `allowances`, `deductions`, `profile_picture`, `registered_by`, `registered_at`, `last_edit_by`, `last_edit_at`) VALUES
-(10, 'admin', 'EIS-001', 'M. Touqeer', 'PHD. Computer Science', 'General Accounts', 'Administrator', 'BPS 08', ',,', '', '../assets/img/profilePictures/touqeer.jpg', 'Touqeer Ahmad', 'November 23, 2021, 5:35 pm', 'admin', 'November 29, 2021, 4:43 pm'),
-(19, 'awais', 'EIS-002', 'Awais Qarni', 'BS Computer Science', 'Human Resource', 'Supervisor', 'BPS 05', '0021,0031', '3301,3251', '../assets/img/profilePictures/awais.png', 'admin', 'November 29, 2021, 5:05 pm', 'admin', 'December 19, 2021, 5:21 pm'),
-(20, 'naveed', 'EIS-003', 'Naveed Ahmad', 'M.Phil Chemistry', 'General Accounts', 'Accountant', 'BPS 06', ',0021,0031,0041', ',3301,3251,,,', '../assets/img/profilePictures/IMG_20201006_185852.jpg', 'admin', 'November 29, 2021, 5:09 pm', 'admin', 'December 19, 2021, 11:10 pm');
+(10, 'admin', 'EIS-001', 'M. Touqeer', 'PHD. Computer Science', 'General Accounts', 'Administrator', 'BPS 08', ',,,', ',3251', '../assets/img/profilePictures/touqeer.jpg', 'Touqeer Ahmad', 'November 23, 2021, 5:35 pm', 'admin', 'November 29, 2021, 4:43 pm'),
+(19, 'awais', 'EIS-002', 'Awais Qarni', 'BS Computer Science', 'Human Resource', 'Supervisor', 'BPS 05', '0021,0031,0041', '3301,3251,', '../assets/img/profilePictures/awais.png', 'admin', 'November 29, 2021, 5:05 pm', 'awais', 'December 21, 2021, 9:15 pm');
 
 -- --------------------------------------------------------
 
@@ -225,8 +223,7 @@ INSERT INTO `leaves_requests` (`id`, `request_id`, `employeeID`, `no_of_leaves`,
 (7, 'LR003', 'EIS-002', 2, 'December 04, 2021', 'December 05, 2021', 'December 06, 2021', 'Casual Leave', 'wedding', 'Rejected', 'it will be paid.. make another request', 'admin', 'December 3, 2021, 11:51 pm'),
 (8, 'LR004', 'EIS-002', 2, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Casual Leave', 'wedding function', 'Rejected', 'it will be paid leave only', 'admin', 'December 5, 2021, 5:41 pm'),
 (9, 'LR005', 'EIS-002', 2, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Paid Leave', 'wedding function', 'Approved', 'ok', 'admin', 'December 5, 2021, 5:41 pm'),
-(10, 'LR006', 'EIS-002', 1, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Casual Leave', 'd', '', '', '', ''),
-(12, 'LR007', 'EIS-003', 17, 'December 19, 2021', 'December 20, 2021', 'December 21, 2021', 'Emergency Leave', 'on medical gorunds', 'Approved', '', 'admin', 'December 20, 2021, 6:49 pm');
+(10, 'LR006', 'EIS-002', 1, 'December 06, 2021', 'December 07, 2021', 'December 08, 2021', 'Casual Leave', 'd', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -252,7 +249,7 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `payment_reference_no`, `paid_to`, `paid_amount`, `paid_allowances`, `paid_allowances_amount`, `paid_deductions`, `paid_deductions_amount`, `payment_made_by`, `payment_timestamp`) VALUES
-(9, 'EISDP1681221800', 'EIS-003', '41200.00', '0031,0021,0041', '16200.00', '3301,3251', '5000.00', 'admin', 'December 21, 2021, 3:42 am');
+(13, 'EISDP5571222980', 'EIS-002', '2700.00', '0031,0021,0041', '10400.00', '3301,3251', '27700.00', 'admin', 'December 22, 2021, 12:22 am');
 
 -- --------------------------------------------------------
 
@@ -279,8 +276,7 @@ CREATE TABLE `user_accounts` (
 
 INSERT INTO `user_accounts` (`id`, `username`, `password_hash`, `full_name`, `designation`, `contact_no`, `email`, `access_level`, `account_status`, `remarks`) VALUES
 (5, 'admin', '$2y$10$To5QW2qqlKqrsalu4Bydj.I2djBHOHZASXf6QLRXVabxUops4EOBa', 'M. Touqeer', 'Administrator', '0301-7064021', 'mc190401547@vu.edu.pk', 'ADMIN', 'ACTIVE', 'email updated'),
-(69, 'awais', '$2y$10$QouXgSeQKVXztkxLMXgDnO/FuXtcLaC06Div4fdo4.NVBmeVIcstS', 'Awais Qarni', 'Supervisor', '0300-1234567', 'awais@gmail.com', 'USER', 'ACTIVE', ''),
-(70, 'naveed', '$2y$10$LiwzWZgEzrdP0XFK8LEARuP8VSfOqRWrqRZL34nMZ/F6UV00xEHJ6', 'Naveed Ahmad', 'Accountant', '0300-1234567', 'naveed@gmail.com', 'USER', 'ACTIVE', '');
+(69, 'awais', '$2y$10$QouXgSeQKVXztkxLMXgDnO/FuXtcLaC06Div4fdo4.NVBmeVIcstS', 'Awais Qarni', 'Supervisor', '0300-1234567', 'awais123@gmail.com', 'USER', 'ACTIVE', '');
 
 --
 -- Indexes for dumped tables
@@ -348,7 +344,7 @@ ALTER TABLE `user_accounts`
 -- AUTO_INCREMENT for table `allowances`
 --
 ALTER TABLE `allowances`
-  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `attendance_sheet`
@@ -360,7 +356,7 @@ ALTER TABLE `attendance_sheet`
 -- AUTO_INCREMENT for table `deductions`
 --
 ALTER TABLE `deductions`
-  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -378,7 +374,7 @@ ALTER TABLE `designations`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `leaves_requests`
@@ -390,13 +386,13 @@ ALTER TABLE `leaves_requests`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `user_accounts`
 --
 ALTER TABLE `user_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
