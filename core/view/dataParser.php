@@ -134,6 +134,67 @@ switch($func){
             }
             break;
 
+
+            
+        case 'updateEmployeeProfile':
+            
+
+            $usernameForUpdate= trim($_POST['usernameForUpdate']);
+            $profile_picture= basename($_FILES['profile_picture']['name']);
+            $picture_tmpName= $_FILES['profile_picture']['tmp_name'];
+            $email= trim($_POST['email']);
+            $password= trim($_POST['password']);
+            $contact= trim($_POST['contact']);
+
+                if(strlen($profile_picture) === 0){
+                    //getting old picture path from database
+                    $userObj= new UserController();
+                    $userDetails= $userObj->getUserData($usernameForUpdate);
+                    $profile_picture= $userDetails['profile_picture'];
+
+                    UpdateEmployeeProfile($usernameForUpdate, $profile_picture, $password, $contact, $email);
+
+                }else{
+                    $folderToUploadPicture= "../../assets/img/profilePictures/";
+                    $profile_picture= $folderToUploadPicture . $profile_picture;
+                    $imageFileType = strtolower(pathinfo($profile_picture,PATHINFO_EXTENSION));
+
+                // Allow certain file formats
+             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+
+                $arr= array("Error", "Only JPG, PNG file types are allowed.");
+                        $_SESSION['notifStatus']= $arr;
+                        redirect_to("../../public/settings");
+                }else{
+
+                    // Check file size, max upload size is 1MB
+                    if ($_FILES["profile_picture"]["size"] < 1000000) {
+                    
+
+                            if(move_uploaded_file($picture_tmpName, $profile_picture)){
+                                $profile_picture= substr($profile_picture, 3);
+            
+                                UpdateEmployeeProfile($usernameForUpdate, $profile_picture, $password, $contact, $email);
+                            }else{
+                                    $arr= array("Error", "There is an error in uploading Image.");
+                                    $_SESSION['notifStatus']= $arr;
+                                    redirect_to("../../public/settings");
+                                }
+                    
+
+                            
+                    }else{
+                        $arr= array("Error", "Image file size should be less than 1 MB");
+                        $_SESSION['notifStatus']= $arr;
+                        redirect_to("../../public/settings");
+                    }
+                }
+                }
+    
+            
+            
+            break;
+
         case 'postDepartment':
 
             $department_code= trim($_POST['department_code']);

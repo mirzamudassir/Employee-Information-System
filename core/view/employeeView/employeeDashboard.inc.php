@@ -87,6 +87,7 @@ require_once 'employeeHeader.inc.php';
                 <div class="col-lg-12">
                     <h1 class="page-header">Dashboard</h1>
                     <?php $userObject->getNotification(); ?>
+
                     
                     <div class="col-lg-4">
                     <div class="panel panel-primary text-center no-boder">
@@ -125,7 +126,7 @@ require_once 'employeeHeader.inc.php';
                             </span>
                         </div>
                     </div>
-                    </div>
+                        </div>
                     </div>
                 </div>
                 <!--End Page Header -->

@@ -197,9 +197,11 @@ unset($_SESSION['notifStatus']);
                           var flag= <?php echo json_encode($flag); ?>
                           
                    swal({
-                   title: flag,
-                   icon: "success",
-                   button: "Ok",
+                    icon: 'success',
+                            title: eval(JSON.stringify(flag[0])),
+                            text: eval(JSON.stringify(flag[1])),
+                            button: "OK",
+                            //timer: 6000 //6 seconds
                    });
                       </script>
 <?php
@@ -501,38 +503,54 @@ public function getCustomeAttendanceSheet($id, $date, $status){
 
   if($status === 'Present'){
 
-  $stmt= $link->prepare("SELECT * FROM attendance_sheet AS presentEmp WHERE punch_in_timestamp LIKE '%$dateWithOutTime%' ORDER BY id DESC");
+  $stmt= $link->prepare("SELECT * FROM `attendance_sheet` WHERE punch_in_timestamp LIKE '%$dateWithOutTime%' ORDER BY id DESC");
 
  
   $stmt->execute();
+
+  if($stmt->rowCount() > 0){
 
   while($row= $stmt->fetch()){
     $employeeID= $row['employeeID'];
     $punch_in_timestamp= $row['punch_in_timestamp'];
     $punch_out_timestamp= $row['punch_out_timestamp'];
-
+    
 
     $stmt2= $link->prepare("SELECT full_name FROM `employees` WHERE employeeID= :employeeID");
     $stmt2->bindParam(":employeeID", $employeeID, PDO::PARAM_STR);
     $stmt2->execute();
     while($row2= $stmt2->fetch()){
       $full_name= $row2['full_name'];
-    }
+    
 
     echo "<tr>
     <td>$employeeID</td>
     <td>$full_name</td>
     <td>$punch_in_timestamp</td>
     <td>$punch_out_timestamp</td>
-    </td>
+    </tr>";
+      }
+    }
+
+    //if data not found
+  }else{
+    echo "<tr>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
     </tr>";
   }
+  
   }elseif($status === 'Absent'){
-    $stmt= $link->prepare("SELECT emp.employeeID, emp.full_name FROM employees emp LEFT JOIN attendance_sheet attend ON emp.employeeID <> attend.employeeID 
-                           WHERE attend.punch_in_timestamp LIKE '%$dateWithOutTime%'");
+    $stmt= $link->prepare("SELECT * FROM `employees` WHERE NOT EXISTS
+                          (SELECT * FROM `attendance_sheet` WHERE attendance_sheet.employeeID = employees.employeeID
+                           AND attendance_sheet.punch_in_timestamp LIKE '%$dateWithOutTime%')");
 
  
   $stmt->execute();
+
+  if($stmt->rowCount() > 0){
 
   while($row= $stmt->fetch()){
     $employeeID= $row['employeeID'];
@@ -546,7 +564,19 @@ public function getCustomeAttendanceSheet($id, $date, $status){
     </td>
     </tr>";
   }
+
+  //if data not found
+  }else{
+    echo "<tr>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      </tr>";
   }
+
+  
+}
   
 }else{
   header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
@@ -1154,6 +1184,74 @@ public function generatePaymentReferenceNo(){
   return $payment_ref_no;
 
   }
+
+
+
+  //it will return leave request record of specific employee
+public function isPaymentMadeAlreadyForCurrentMonth($paid_to){
+  global $link;
+  //current month
+  $current_month= date("F");
+  $current_year= date("Y");
+
+  $stmt= $link->prepare("SELECT * FROM `payments` WHERE paid_to= :paid_to 
+                        AND payment_timestamp LIKE '%$current_month%' 
+                        AND payment_timestamp LIKE '%$current_year%'");
+  $stmt->bindParam(":paid_to", $paid_to, PDO::PARAM_STR);
+
+      $stmt->execute();
+
+      if($stmt->rowCount() > 0){
+        while($row= $stmt->fetch()){
+          $payment_ref_no= $row['payment_reference_no'];
+        }
+        return $payment_ref_no;
+      }else{
+        return FALSE;
+      }
+      
+
+    }
+
+
+
+
+
+    public function getPaymentsHistory($query, $args, $id){
+      if(isAdminValid($id)){
+      global $link;
+    
+        if($query=="getListForTable"){
+          $stmt= $link->prepare("SELECT * FROM `payments`");
+          $stmt->execute();
+        
+          while($row= $stmt->fetch()){
+            $id= $row['id'];
+            $payment_reference_no= $row['payment_reference_no'];
+            $paid_to= $row['paid_to'];
+            $paid_amount= $row['paid_amount'];
+            $paid_allowances_amount= $row['paid_allowances_amount'];
+            $paid_deductions_amount= $row['paid_deductions_amount'];
+            $payment_timestamp= $row['payment_timestamp'];
+        
+            echo "<tr>
+            <td>$payment_reference_no</td>
+            <td>$paid_to</td>
+            <td>$paid_amount</td>
+            <td>$paid_allowances_amount</td>
+            <td>$paid_deductions_amount</td>
+            <td>$payment_timestamp</td>
+            </tr>";
+          }
+        }else{
+            echo "No data found.";
+        }
+      }else{
+        header("Location: http://localhost/project/public/error?error=ERR_ACCESS_DENIED");
+            exit();
+            return false;
+      }
+    }
 
 
 

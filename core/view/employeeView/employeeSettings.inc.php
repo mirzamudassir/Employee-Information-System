@@ -95,7 +95,7 @@ $userObject= new UserController();
                 <!-- Page Header -->
                 <div class="col-lg-12">
                     <h1 class="page-header">Profile</h1>
-
+                    <?php $userObject->getNotification(); ?>
                                         <!--Basic Tabs   -->
                                         <div class="panel panel-default">
                         <div class="panel-heading">
@@ -105,8 +105,7 @@ $userObject= new UserController();
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#profile" data-toggle="tab">Profile</a>
                                 </li>
-                                <li><a href="#settings" data-toggle="tab">Settings</a>
-                                </li>
+                                
                             </ul>
 
                             <div class="tab-content">
@@ -116,7 +115,7 @@ $userObject= new UserController();
                                  ?>
                                  
     
-                                 <table style='width:100%; padding-top: 10%; font-size: 1em; display:inline-block;'>
+                                 <table style='width:100%; padding-top: 3%; font-size: 1em; display:inline-block;'>
          <th style='line-height: 2em; padding-bottom: 3%;'>
          <u style='font-weight: bold; text-align: center;'>Personal Information</u>
          </th>
@@ -138,15 +137,18 @@ $userObject= new UserController();
          <td><b>Contact #:</b> <?php echo $arr['contact_no'] ?></td>
          <td><b>Email :</b> <?php echo $arr['email'] ?> </td>
          </tr>
+
+         <tr>
+             <td></td>
+             <td><button data-id='<?php echo $_SESSION['id'] ?>' class='userinfo btn btn-success' style='margin-top: 10%;'>Update Profile <i class='fa fa-edit'></i></button></td>
+                <td></td>
+            </tr>
          
          </table>
 
-                                
-                               
-                                    
-                                </div>
-                                <div class="tab-pane fade" id="settings">
-                                        <!-- Update User Record Modal Alert Start -->
+         
+         
+                                    <!-- Update User Record Modal Alert Start -->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -164,8 +166,8 @@ $userObject= new UserController();
                                 </div>
                             </div>
                         <!-- Update User Record Modal Alrt End -->
-                                <button data-id='<?php echo $_SESSION['id'] ?>' class='userinfo icon-color' style='margin-top: 10%;'>Update Profile <i class='fa fa-edit'></i></button>
                                 </div>
+                               
                             </div>
                         </div>
                     </div>

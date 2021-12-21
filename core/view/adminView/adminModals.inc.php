@@ -392,7 +392,7 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                                             <h4 class="modal-title" id="myModalLabel"> Attendance Record</h4>
                                         </div>
                                         <div class="modal-body">
-                                        <form action="" method="POST">
+                                        <form action="" method="POST" id="getAttendanceRecord">
                                         <div class="form-group to-left-50">
                                             <label>Date <span class="title-red">*</span></label>
                                             <input class="form-control" name="date" type="date" max="<?php echo date("Y-m-d", strtotime(date("Y-m-d") . "-1 day")); ?>" required>
@@ -411,14 +411,14 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                                         </form>
 
                                         <div class="table-responsive" id="printAttendanceRecordTable">
-                                         <table class="table table-striped table-bordered table-hover" id="attendance-record">
+                                         <table class="table table-striped table-bordered table-hover" id="attendance-record-Table">
                                         <thead>
                                         <th> Emp # </th>
                                         <th> Name </th>
                                         <th> Punch In </th>
                                         <th> Punch Out </th>
                                         </thead>
-                                        <tbody id="result">
+                                        <tbody id="attendanceRecordTable">
                                          
                                         </tbody>
                                         </table>
@@ -656,6 +656,44 @@ $userDetails= $userControllerObject->getUserDetails($_SESSION['id']);
                         <!-- Manage Deductions Modal Alrt End -->
 
 
+
+                          <!-- Payments History Modal Alert Start -->
+<div class="modal fade" id="paymentsHistory" tabindex="-1" role="dialog" aria-labelledby="paymentsHistory" aria-hidden="true">
+                                <div class="modal-dialog" style="width:80%">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel"> Payments Histroy <i class="fa fa-history"></i></h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                        <div class="table-responsive">
+                                         <table class="table table-striped table-bordered table-hover" id="paymentsHistoryTable">
+                                        <thead>
+                                        <th> Ref # </th>
+                                        <th> Payee</th>
+                                        <th>Paid Amount</th>
+                                        <th>Allowances</th>
+                                        <th> Deductions </th>
+                                        <th> Date </th>
+                                        </thead>
+                                        <tbody>
+                                        <?php $userControllerObject->getPaymentsHistory("getListForTable", "", $_SESSION['id']); ?>
+                                        </tbody>
+                                        </table>
+                                        </div>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- payments History Modal Alrt End -->
+
+
                         <?php require_once 'adminFooter.inc.php' ?>
 
                         <script>
@@ -756,6 +794,8 @@ $("#paymentSettings").submit(function(event){
 });
 
 });
+
+
 
                         
                         </script>

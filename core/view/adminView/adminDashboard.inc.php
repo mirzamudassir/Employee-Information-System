@@ -57,7 +57,7 @@ $userObject= new UserController();
                         <!-- user image section-->
                         <div class="user-section">
                             <div class="user-section-inner">
-                                <img src="../assets/img/user.jpg" alt="">
+                            <img src="<?php echo $arr['profile_picture']; ?>" alt="Profile Picture" height='50px' width='60px'>
                             </div>
                             <div class="user-info">
                                 <div><h4><?php $arr= $userObject->getUserData($_SESSION['username']); 
@@ -96,41 +96,66 @@ $userObject= new UserController();
                 <div class="col-lg-12">
                     <h1 class="page-header">Dashboard</h1>
                     <?php $userObject->getNotification(); ?>
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#addUser">Add User</button>
-                                    <!-- Advanced Tables -->
-                                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                             Items
+                    
+                    <div class="col-lg-4">
+                    <div class="panel panel-primary text-center no-boder">
+                        <div class="panel-body yellow">
+                            <i class="fa fa-user fa-3x"></i>
+                            <h3>4000</h3>
                         </div>
-                        
-                       Dashboard
-                        <form method="POST" action="">
-                       <input type="date" name="time">
-                       <input type="submit" value="submit">
-                       </form>
-
-                       <?php  if(isset($_POST['time'])){ echo $_POST['time'];} ?>
+                        <div class="panel-footer">
+                            <span class="panel-eyecandy-title">Total Registered Employees
+                            </span>
+                        </div>
                     </div>
-                    <!--End Advanced Tables -->
+                    </div>
 
-<!-- Update Item Record Modal Alert Start -->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel"> Update User Record</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        
-                                       
-                                        
-                                        </div>
-                                       
-                                    </div>
+                    <div class="col-lg-4">
+                    <div class="panel panel-primary text-center no-boder">
+                        <div class="panel-body blue">
+                            <i class="fa fa-plane fa-fw fa-3x"></i>
+                            <h3>156</h3>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="panel-eyecandy-title">Pending Leaves Requests
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                    <div class="panel panel-primary text-center no-boder">
+                        <div class="panel-body blue">
+                            <i class="fa fa-plane fa-fw fa-3x"></i>
+                            
+                        </div>
+                        <div class="panel-footer">
+                            <span class="panel-eyecandy-title">Total Leaves this Month
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+
+
+                                                            <!--Basic Tabs   -->
+                                                            <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Personal Information
+                        </div>
+                        <div class="panel-body">
+                            
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="profile">
+                                //body
+                                 
+
                                 </div>
+                               
                             </div>
-                        <!-- Update Item Record Modal Alrt End -->
+                        </div>
+                    </div>
+                    <!--End Basic Tabs   -->
+
                        
                 </div>
                 <!--End Page Header -->

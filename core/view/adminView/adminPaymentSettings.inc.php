@@ -96,7 +96,14 @@ $userObject= new UserController();
                 <div class="col-lg-12">
                     <h1 class="page-header">Payment Settings</h1>
                     <?php $userObject->getNotification(); ?>
-                   
+                    <!--Basic Tabs   -->
+                    <div class="panel panel-default">
+                        
+                        <div class="panel-body">
+                            
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active">
+
                    <table class="payroll-table">
                     <tr class="payroll-table-tr">
 
@@ -116,6 +123,15 @@ $userObject= new UserController();
                     </tr>
 
                    </table>
+
+                   
+                   </div>
+                               
+                               </div>
+                           </div>
+                       </div>
+                       <!--End Basic Tabs   -->
+
                    
                 </div>
                 <!--End Page Header -->

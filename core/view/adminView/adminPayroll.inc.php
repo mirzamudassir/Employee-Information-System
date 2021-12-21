@@ -96,12 +96,20 @@ $userObject= new UserController();
                 <div class="col-lg-12">
                     <h1 class="page-header">Pay Roll</h1>
                     <?php $userObject->getNotification(); ?>
-                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#bulkPayments">Bulk Payments <i class="fa fa-list fa-dollar-sign"></i></button>
+
+                                <!--Basic Tabs   -->
+                            <div class="panel panel-default">
+                        <div class="panel-heading">
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageAllowances">Manage Allowances <i class="fa fa-list fa-hand-holding-usd"></i></button>
                     <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#manageDeductions">Manage Deductions <i class="fa fa-list fa-percentage"></i></button>
                     <a href="paymentSettings" class="page"><button type="button" class="btn btn-primary button-left-50">Payment Settings <i class="fa fa-cogs fa-fw"></i></button></a>
-                    
+                    <button type="button" class="btn btn-primary button-left-50" data-toggle="modal" data-target="#paymentsHistory">Payments History <i class="fa fa-list fa-history"></i></button>
 
+                        </div>
+                        <div class="panel-body">
+                            
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="profile">
 
                    <table class="payroll-table">
                     <tr class="payroll-table-tr">
@@ -120,6 +128,14 @@ $userObject= new UserController();
                     </tr>
 
                    </table>
+
+                       
+                   </div>
+                               
+                               </div>
+                           </div>
+                       </div>
+                       <!--End Basic Tabs   -->
 
                        
                 </div>

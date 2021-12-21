@@ -177,12 +177,97 @@ $userObject= new UserController();
                     $link= NULL;
             }
 
+
+            function updateEmployeeProfile($usernameForUpdate, $profile_picture, $password, $contact, $email){
+                global $link;
+                try{
+
+                if(empty($password) === TRUE){
+                    $query= $link->prepare("UPDATE `user_accounts` SET contact_no= :contact_no,
+                    email= :email WHERE username=:usernameForUpdate");
+                    $query->bindParam(":contact_no", $contact, PDO::PARAM_STR);
+                    $query->bindParam(":email", $email, PDO::PARAM_STR);
+                    $query->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
+
+                    //update the employees table
+                    $last_edit_by= $_SESSION['username'];
+                    $last_edit_at= date("F j, Y, g:i a");
+
+                    $stmt= $link->prepare("UPDATE `employees` SET profile_picture= :profile_picture, last_edit_by= :last_edit_by, last_edit_at= :last_edit_at
+                    WHERE username=:usernameForUpdate");
+                    $stmt->bindParam(":profile_picture", $profile_picture, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_by", $last_edit_by, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_at", $last_edit_at, PDO::PARAM_STR);
+                    $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
+
+                if($query->execute() === TRUE AND $stmt->execute() === TRUE){
+                    $_SESSION['notifStatus']= "Profile Updated";
+                redirect_to("../../public/settings");
+                }
+                
+                else{
+                    $_SESSION['notifStatus']= "Error";
+                    redirect_to("../../public/settings");
+                }
+                }else{
+                    //using default bcrypt hsahing technique
+                    $password_hash= password_hash($password, PASSWORD_DEFAULT);
+                
+                    $query= $link->prepare("UPDATE `user_accounts` SET password_hash= :password_hash, contact_no= :contact_no,
+                    email= :email WHERE username=:usernameForUpdate");
+                    $query->bindParam(":password_hash", $password_hash, PDO::PARAM_STR);
+                    $query->bindParam(":contact_no", $contact, PDO::PARAM_STR);
+                    $query->bindParam(":email", $email, PDO::PARAM_STR);
+                    $query->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
+
+                    //update the employees table
+                    $last_edit_by= $_SESSION['username'];
+                    $last_edit_at= date("F j, Y, g:i a");
+
+                    $stmt= $link->prepare("UPDATE `employees` SET profile_picture= :profile_picture, last_edit_by= :last_edit_by, last_edit_at= :last_edit_at
+                    WHERE username=:usernameForUpdate");
+                    $stmt->bindParam(":profile_picture", $profile_picture, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_by", $last_edit_by, PDO::PARAM_STR);
+                    $stmt->bindParam(":last_edit_at", $last_edit_at, PDO::PARAM_STR);
+                    $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
+
+                if($query->execute() === TRUE AND $stmt->execute() === TRUE){
+                    $_SESSION['notifStatus']= "Profile Updated";
+                redirect_to("../../public/settings");
+                }
+                
+                else{
+                    $arr= array("Error", "Error Updating User. Try again.");
+            $_SESSION['notifStatus']= $arr;
+                    redirect_to("../../public/settings");
+                }
+                
+                }
+
+                    }catch(PDOExeption $ex){
+                            echo "ERROR";
+                    }
+
+                    //dispose the db connection
+                    $link= NULL;
+            }
+
             function deleteUser($usernameForUpdate){
                 global $link;
+                global $userObject;
+
+                $arr1= $userObject->getUserData($usernameForUpdate);
+                $userID= $arr1['id'];
+                $arr= $userObject->getUserDetails($userID);
+                $employeeID= $arr['employeeID'];
             
                 $query= $link->prepare("DELETE FROM `user_accounts` WHERE username= :username;
-                                        DELETE FROM `employees` WHERE username= :username");
+                                        DELETE FROM `employees` WHERE username= :username;
+                                        DELETE FROM `leaves_requests` WHERE employeeID= :employeeID;
+                                        DELETE FROM `attendance_sheet` WHERE employeeID= :employeeID;
+                                        DELETE FROM `payments` WHERE paid_to= :employeeID");
                 $query->bindParam(':username', $usernameForUpdate, PDO::PARAM_STR);
+                $query->bindParam(':employeeID', $employeeID, PDO::PARAM_STR);
 
                 if($query->execute() === TRUE){
                     $_SESSION['notifStatus']= "User Deleted";
@@ -671,7 +756,8 @@ $userObject= new UserController();
                             $query->bindParam(":payment_timestamp", $payment_timestamp, PDO::PARAM_STR);
                     
                             if($query->execute()){
-                                $_SESSION['notifStatus']= "Payment Successful";
+                                $arr= array("Payment Successful", "Ref #: $payment_reference_no");
+                                $_SESSION['notifStatus']= $arr;
                                 redirect_to("../../public/payroll");
                             }
                             

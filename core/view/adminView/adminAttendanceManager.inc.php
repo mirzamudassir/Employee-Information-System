@@ -148,6 +148,28 @@ $employeeObject= new EmployeeController();
 
     <?php require_once 'adminFooter.inc.php' ?>
 
+    <script>
+        $(document).ready(function(){
+
+$("#getAttendanceRecord").submit(function(event){
+    event.preventDefault();
+     $.ajax({
+        url: '../core/view/ajaxAttendanceRecord',
+        type: 'post',
+        data: $('form').serialize(),
+        success: function(response){
+
+            // Add response in Modal body
+            $('#attendanceRecordTable').html(response);
+
+        }
+     });
+
+});
+
+});
+
+    </script>
 
 </body>
 

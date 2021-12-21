@@ -41,7 +41,7 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#attendance-record').dataTable();
+            $('#attendance-record-Table').dataTable();
         });
 
         $(document).ready(function () {
@@ -52,6 +52,12 @@
         });
         $(document).ready(function () {
             $('#deductions').dataTable();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#paymentsHistoryTable').dataTable();
         });
     </script>
 

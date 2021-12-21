@@ -116,24 +116,43 @@ if(isset($_POST['employeeID'])){
       $sumOfDeductions= ($basic_salary / 100) * getSumOfDeductions($deductions, $pay_scale, $link) + $leaves_charges . ".00";
       $net_pay= $gross_pay - $sumOfDeductions . ".00";
 
-      if($net_pay > 1 AND $account_status === 'ACTIVE'){
-         $payNowButton= "<input type='submit' name='makePayment' class='btn btn-success btn-right-50' style='margin-top: 4%; margin-left: 20%; width: 30%;' data-id='' value='Pay Now'>";
-      }else{
-         if($account_status != 'ACTIVE'){
-            $payNowButton= "
-         <label class='alert'>Payment Error : Account is $account_status. Payment cannot proceed.</label>";
-         }else{
-         $payNowButton= "
-         <label class='alert'>Payment Error : Account is in Debt. Payment cannot proceed.</label>";
-         }
-      }
 
+      
       //get the allowances and deductions of employee to generate allowances and deductions codes array
       $paid_allowances_array= $userObject->getAllowances("getCodes", array("pay_scale"=>$pay_scale, 'forEmployee'=>$employeeID, 'username'=>$username), $_SESSION['id']);
       $paid_deductions_array= $userObject->getDeductions("getCodes", array("pay_scale"=>$pay_scale, 'forEmployee'=>$employeeID, 'username'=>$username), $_SESSION['id']);
       
       $paid_allowances= htmlspecialchars(serialize($paid_allowances_array));
       $paid_deductions= htmlspecialchars(serialize($paid_deductions_array));
+
+      $currentMonth= date("F");
+
+      //check if payment has been already made for this month
+      $isPaymentMadeAlreadyForCurrentMonth= $userObject->isPaymentMadeAlreadyForCurrentMonth($employeeID);
+
+      if($net_pay > 1 AND $account_status === 'ACTIVE' AND $isPaymentMadeAlreadyForCurrentMonth === FALSE){
+         $payNowButton= "
+         <form action='../core/view/dataParser?f=makePayment' method='POST'>
+         <input type='hidden' name='paid_to' value='$employeeID'>
+         <input type='hidden' name='paid_amount' value='$net_pay'>
+         <input type='hidden' name='paid_allowances' value='$paid_allowances'>
+         <input type='hidden' name='paid_allowances_amount' value='$sumOfAllowances'>
+         <input type='hidden' name='paid_deductions' value='$paid_deductions'>
+         <input type='hidden' name='paid_deductions_amount' value='$sumOfDeductions'>
+         <input type='submit' name='makePayment' class='btn btn-success btn-right-50' style='margin-top: 4%; margin-left: 20%; width: 30%;' data-id='' value='Pay Now'>";
+      }else{
+         if($account_status != 'ACTIVE'){
+            $payNowButton= "
+         <label class='alert'>Payment Error : Account is $account_status. Payment cannot proceed.</label>";
+         }elseif($isPaymentMadeAlreadyForCurrentMonth !== FALSE){
+            $payNowButton= "
+            <label class='alert'>Payment Error : Payment already has been made for $currentMonth. <br> Ref #: $isPaymentMadeAlreadyForCurrentMonth</label>";
+            }else{
+         $payNowButton= "
+         <label class='alert'>Payment Error : Account is in Debt. Payment cannot proceed.</label>";
+         }
+      }
+
 
 
          echo "
@@ -168,7 +187,7 @@ if(isset($_POST['employeeID'])){
 
          <table style='float: right; width:20%; font-size: 1em; display:inline-block;'>
          <tr style='line-height: 2em;'>
-         <td><img src='$profile_picture' alt='profile_picture' width='160px' height='170px'></td>
+         <td><img src='$profile_picture' alt='profile_picture' class='payRollProfilePicture' id='payRollProfilePicture'></td>
          </tr>
 
          </table>
@@ -248,13 +267,7 @@ if(isset($_POST['employeeID'])){
          
          </table>
 
-         <form action='../core/view/dataParser?f=makePayment' method='POST'>
-         <input type='hidden' name='paid_to' value='$employeeID'>
-         <input type='hidden' name='paid_amount' value='$net_pay'>
-         <input type='hidden' name='paid_allowances' value='$paid_allowances'>
-         <input type='hidden' name='paid_allowances_amount' value='$sumOfAllowances'>
-         <input type='hidden' name='paid_deductions' value='$paid_deductions'>
-         <input type='hidden' name='paid_deductions_amount' value='$sumOfDeductions'>
+        
          $payNowButton
          </form>
          
