@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2021 at 08:25 PM
+-- Generation Time: Dec 22, 2021 at 11:23 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -236,10 +236,10 @@ CREATE TABLE `payments` (
   `payment_reference_no` varchar(240) NOT NULL,
   `paid_to` varchar(240) NOT NULL,
   `paid_amount` varchar(240) NOT NULL,
-  `paid_allowances` varchar(240) NOT NULL,
-  `paid_allowances_amount` varchar(240) NOT NULL,
-  `paid_deductions` varchar(240) NOT NULL,
-  `paid_deductions_amount` varchar(240) NOT NULL,
+  `paid_allowances` varchar(240) DEFAULT NULL,
+  `paid_allowances_amount` varchar(240) DEFAULT NULL,
+  `paid_deductions` varchar(240) DEFAULT NULL,
+  `paid_deductions_amount` varchar(240) DEFAULT NULL,
   `payment_made_by` varchar(100) NOT NULL,
   `payment_timestamp` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -374,25 +374,25 @@ ALTER TABLE `designations`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(230) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `leaves_requests`
 --
 ALTER TABLE `leaves_requests`
-  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user_accounts`
 --
 ALTER TABLE `user_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

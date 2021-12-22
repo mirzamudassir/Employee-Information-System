@@ -627,9 +627,10 @@ public function getLeavesSettings($id){
 
 
 //it will return leave request record of specific employee
-public function getLeavesRecordForAdmin(){
+public function getLeavesRecordForAdmin($query){
   global $link;
 
+  if($query === 'forTable'){
   $stmt= $link->prepare("SELECT * FROM `leaves_requests` WHERE request_status='' ORDER BY id DESC");
 
       $stmt->execute();
@@ -671,6 +672,14 @@ public function getLeavesRecordForAdmin(){
 
 
     }
+  }elseif($query === 'count'){
+    $stmt= $link->prepare("SELECT * FROM `leaves_requests` WHERE request_status=''");
+
+      $stmt->execute();
+      $count= $stmt->rowCount();
+      return $count;
+
+  }
 
 
 }
@@ -1255,6 +1264,22 @@ public function isPaymentMadeAlreadyForCurrentMonth($paid_to){
 
 
 
+    public function getTotalRegisteredEmployees($id){
+      if(isAdminValid($id)){
+      global $link;
+
+      $stmt= $link->prepare("SELECT * FROM `employees`");
+      $stmt->execute();
+    
+          $count= $stmt->rowCount();
+
+          return $count;
+        }else{
+
+            return "Access Denied";
+            exit;
+        }
+      }
   
   
   /**$current_location= dirname(__FILE__);

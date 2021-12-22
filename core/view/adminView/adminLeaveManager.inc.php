@@ -121,7 +121,7 @@ $employeeObject= new EmployeeController();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $userObject->getLeavesRecordForAdmin(); ?>
+                                        <?php $userObject->getLeavesRecordForAdmin("forTable"); ?>
                                     </tbody>
                                 </table>
                             </div>

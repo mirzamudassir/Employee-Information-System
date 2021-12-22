@@ -101,7 +101,7 @@ $userObject= new UserController();
                     <div class="panel panel-primary text-center no-boder">
                         <div class="panel-body yellow">
                             <i class="fa fa-user fa-3x"></i>
-                            <h3>4000</h3>
+                            <h3><?php echo $userObject->getTotalRegisteredEmployees($_SESSION['id']); ?></h3>
                         </div>
                         <div class="panel-footer">
                             <span class="panel-eyecandy-title">Total Registered Employees
@@ -114,7 +114,7 @@ $userObject= new UserController();
                     <div class="panel panel-primary text-center no-boder">
                         <div class="panel-body blue">
                             <i class="fa fa-plane fa-fw fa-3x"></i>
-                            <h3>156</h3>
+                            <h3><?php echo $userObject->getLeavesRecordForAdmin('count'); ?></h3>
                         </div>
                         <div class="panel-footer">
                             <span class="panel-eyecandy-title">Pending Leaves Requests
@@ -126,35 +126,15 @@ $userObject= new UserController();
                     <div class="col-lg-4">
                     <div class="panel panel-primary text-center no-boder">
                         <div class="panel-body blue">
-                            <i class="fa fa-plane fa-fw fa-3x"></i>
-                            
+                            <i class="fa fa-stamp fa-fw fa-3x"></i>
+                            <h3>0</h3>
                         </div>
                         <div class="panel-footer">
-                            <span class="panel-eyecandy-title">Total Leaves this Month
+                            <span class="panel-eyecandy-title">Present Employees
                             </span>
                         </div>
                     </div>
                     </div>
-
-
-                                                            <!--Basic Tabs   -->
-                                                            <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Personal Information
-                        </div>
-                        <div class="panel-body">
-                            
-                            <div class="tab-content">
-                                <div class="tab-pane fade in active" id="profile">
-                                //body
-                                 
-
-                                </div>
-                               
-                            </div>
-                        </div>
-                    </div>
-                    <!--End Basic Tabs   -->
 
                        
                 </div>

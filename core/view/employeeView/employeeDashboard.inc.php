@@ -93,7 +93,7 @@ require_once 'employeeHeader.inc.php';
                     <div class="panel panel-primary text-center no-boder">
                         <div class="panel-body blue">
                             <i class="fa fa-plane fa-fw fa-3x"></i>
-                            
+                            <h3>0</h3>
                         </div>
                         <div class="panel-footer">
                             <span class="panel-eyecandy-title">Total Leaves this Month
@@ -106,7 +106,7 @@ require_once 'employeeHeader.inc.php';
                     <div class="panel panel-primary text-center no-boder">
                         <div class="panel-body blue">
                             <i class="fa fa-stamp fa-fw fa-3x"></i>
-                            
+                            <h3>0</h3>
                         </div>
                         <div class="panel-footer">
                             <span class="panel-eyecandy-title">Pending Leave Requests
@@ -119,10 +119,10 @@ require_once 'employeeHeader.inc.php';
                     <div class="panel panel-primary text-center no-boder">
                         <div class="panel-body blue">
                             <i class="fa fa-pencil-square-o fa-3x"></i>
-                            
+                            <h3>0</h3>
                         </div>
                         <div class="panel-footer">
-                            <span class="panel-eyecandy-title">Pending for Price List
+                            <span class="panel-eyecandy-title">Remaning Leaves this month
                             </span>
                         </div>
                     </div>
