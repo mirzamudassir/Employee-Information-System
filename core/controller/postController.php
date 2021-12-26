@@ -118,7 +118,7 @@ $userObject= new UserController();
                     $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
                 if($query->execute() === TRUE AND $stmt->execute() === TRUE){
-                    $_SESSION['notifStatus']= "User Updated";
+                    $_SESSION['notifStatus']= array("User Updated");
                 redirect_to("../../public/settings");
                 }
                 
@@ -157,7 +157,7 @@ $userObject= new UserController();
                     $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
                 if($query->execute() === TRUE AND $stmt->execute() === TRUE){
-                    $_SESSION['notifStatus']= "User Updated";
+                    $_SESSION['notifStatus']= array("User Updated");
                 redirect_to("../../public/settings");
                 }
                 
@@ -201,7 +201,7 @@ $userObject= new UserController();
                     $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
                 if($query->execute() === TRUE AND $stmt->execute() === TRUE){
-                    $_SESSION['notifStatus']= "Profile Updated";
+                    $_SESSION['notifStatus']= array("Profile Updated");
                 redirect_to("../../public/settings");
                 }
                 
@@ -232,7 +232,7 @@ $userObject= new UserController();
                     $stmt->bindParam(":usernameForUpdate", $usernameForUpdate, PDO::PARAM_STR);
 
                 if($query->execute() === TRUE AND $stmt->execute() === TRUE){
-                    $_SESSION['notifStatus']= "Profile Updated";
+                    $_SESSION['notifStatus']= array("Profile Updated");
                 redirect_to("../../public/settings");
                 }
                 
@@ -270,7 +270,7 @@ $userObject= new UserController();
                 $query->bindParam(':employeeID', $employeeID, PDO::PARAM_STR);
 
                 if($query->execute() === TRUE){
-                    $_SESSION['notifStatus']= "User Deleted";
+                    $_SESSION['notifStatus']= array("User Deleted");
                     redirect_to("../../public/settings");
                 }
             
@@ -312,7 +312,7 @@ $userObject= new UserController();
                 $query->bindParam(':id', $desigID, PDO::PARAM_INT);
 
                 if($query->execute() === TRUE){
-                    $_SESSION['notifStatus']= "Designation Deleted";
+                    $_SESSION['notifStatus']= array("Designation Deleted");
                     redirect_to("../../public/settings");
                 }
             
@@ -337,7 +337,7 @@ $userObject= new UserController();
                 $query->bindParam(":basic_salary", $basic_salary, PDO::PARAM_STR);
         
                 if($query->execute()){
-                    $_SESSION['notifStatus']= "Designation Added";
+                    $_SESSION['notifStatus']= array("Designation Added");
                     redirect_to("../../public/settings");
                 }
                 
@@ -422,7 +422,7 @@ $userObject= new UserController();
                         $query->bindParam(":designation_name", $designation, PDO::PARAM_STR);
                 
                         if($query->execute()){
-                            $_SESSION['notifStatus']= "Settings Saved";
+                            $_SESSION['notifStatus']= array("Settings Saved");
                             redirect_to("../../public/leaveManager");
                         }
                         
@@ -443,7 +443,7 @@ $userObject= new UserController();
                             $query->bindParam(":designation_name", $designation, PDO::PARAM_STR);
             
                             if($query->execute() === TRUE){
-                                $_SESSION['notifStatus']= "Settings Removed";
+                                $_SESSION['notifStatus']= array("Settings Removed");
                                 redirect_to("../../public/leaveManager");
                             }
                         
@@ -481,7 +481,7 @@ $userObject= new UserController();
                             $query->bindParam(":reason", $reason, PDO::PARAM_STR);
             
                             if($query->execute() === TRUE){
-                                $_SESSION['notifStatus']= "Request Submitted";
+                                $_SESSION['notifStatus']= array("Request Submitted");
                                 redirect_to("../../public/leaveManager");
                             }
                         
@@ -514,7 +514,7 @@ $userObject= new UserController();
                             $stmt->bindParam(":request_id", $requestID, PDO::PARAM_STR);
 
                             if($stmt->execute() === TRUE){
-                                $_SESSION['notifStatus']= "Request Rejected";
+                                $_SESSION['notifStatus']= array("Request Rejected");
                                 redirect_to("../../public/leaveManager");
                             }else{
                                 $_SESSION['notifStatus']= "Error";
@@ -547,7 +547,7 @@ $userObject= new UserController();
                             $stmt->bindParam(":request_id", $requestID, PDO::PARAM_STR);
 
                             if($stmt->execute() === TRUE){
-                                $_SESSION['notifStatus']= "Request Approved";
+                                $_SESSION['notifStatus']= array("Request Approved");
                                 redirect_to("../../public/leaveManager");
                             }else{
                                 $_SESSION['notifStatus']= "Error";
