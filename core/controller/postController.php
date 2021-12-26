@@ -382,7 +382,8 @@ $userObject= new UserController();
                         $stmt->bindParam(":punch_in_timestamp", $punch_in_timestamp);
 
                         if($stmt->execute()){
-                            $_SESSION['notifStatus']= "Punched In";
+                            $arr= array("Punched In", "Time: $punch_in_timestamp");
+                            $_SESSION['notifStatus']= $arr;
                             redirect_to("../../public/attendanceManager");
                         }
 
@@ -401,7 +402,8 @@ $userObject= new UserController();
                         $stmt->bindParam(":employeeID", $employeeID);
 
                         if($stmt->execute()){
-                            $_SESSION['notifStatus']= "Punched Out";
+                            $arr= array("Punched Out", "Time: $punch_out_timestamp");
+                            $_SESSION['notifStatus']= $arr;
                             redirect_to("../../public/attendanceManager");
                         }
 
@@ -582,7 +584,8 @@ $userObject= new UserController();
                 $query->bindParam(":posted_timestamp", $posted_timestamp, PDO::PARAM_STR);
         
                 if($query->execute()){
-                    $_SESSION['notifStatus']= "Allowance Added";
+                    
+                    $_SESSION['notifStatus']= array("Allowance Added");
                     redirect_to("../../public/payroll");
                 }
                 
@@ -643,7 +646,7 @@ $userObject= new UserController();
                     $query->bindParam(":posted_timestamp", $posted_timestamp, PDO::PARAM_STR);
             
                     if($query->execute()){
-                        $_SESSION['notifStatus']= "Deduction Added";
+                        $_SESSION['notifStatus']= array("Deduction Added");
                         redirect_to("../../public/payroll");
                     }
                     
